@@ -1,0 +1,511 @@
+﻿@model SubscriptionPlanModel
+@{
+    ViewData["Title"] = "Index";
+}
+@section Styles{
+  <!--Alertify.js-->
+<!-- include the style -->
+<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+<!-- include a theme -->
+<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+
+<!--Toggle switch-->
+<link href="~/CustomSwitch/css/component-custom-switch.css" rel="stylesheet">
+
+ <!--Pricing cards-->
+<link rel="stylesheet" href="~/css/PricingStyleSheet.css" type="text/css" />
+<link rel="stylesheet" href="~/css/PricingStyleSheetDynamic.css" type="text/css" />
+<!--2nd is for dynamic changes-->
+
+}
+
+
+<div class="planPannel row align-items-center" id="subscriptionPlannel">
+    <div class="planInput col" align="center"> 
+        <h3 class="mt-2">Input plan info</h3>
+        <div class="col-md-4 col-sm-6 m-4 text-center" id="subscriptionPlan">
+            @*<form role="form">*@
+                <div class="pricingTableDynamic" style="--inputColor:#ed4034">
+                    <div class="pricingTableDynamic-header">
+                        <div class="price-value"> 
+                            <div class="form-group row">
+                                <div class="col ml-4">
+                                <input type="number" min="0" class="form-control banner-info" id="planPriceId" placeholder="Plan Price" onkeyup="textChange()" required >
+                                
+                                </div>
+                                <div class="col-3 ml-n2" style="top: -8px;">৳</div>
+                            </div>
+                            <span class="month">per month</span> 
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <div class="ml-2 mr-2 mt-2">
+                        <input type="text" class="form-control banner-info" id="planNameId" placeholder="Plan Name" onkeyup="textChange()" required>
+                        
+                    </div>
+                 </div>
+                <div class="pricing-content">
+                    <ul>
+                        <li>
+                           <div class="form-group row mt-4">
+                                    <div class="col ml-n4">
+                                        Max
+                                    </div>
+                                    <div class="col mr-n1 ml-n5">
+                                    <input type="number" min="0" class="form-control banner-info" id="planUploadLimitId" placeholder="Upload limit" onkeyup="textChange()" required >
+                                    </div>
+                                    <div class="col ml-n3"> product upload</div>
+                                </div>   
+                           </li>                     
+                        <li>
+                                <div class="form-group row mt-2">
+                                    <div class="col mr-3 ml-n3">
+                                        Max
+                                    </div>
+                                    <div class="col mr-n1 ml-n5">
+                                    <input type="number" min="0" class="form-control banner-info" id="planSizeIdGB" placeholder="GB" onkeyup="textChange()">
+                                    </div>
+                                    <div class="col ml-n1">
+                                    <input type="number" min="0" class="form-control banner-info" id="planSizeIdMB" placeholder="MB" onkeyup="textChange()">
+                                    </div>
+                                  
+                                    <div class="col ml-n3">Disk Space</div>
+                                </div>
+
+                        </li>
+                                                                                                              
+                    </ul>
+                </div>
+                <div class="pricingTableDynamic-signup form-group">
+                  <a href="#" id="pickerButton" class="btn rounded-pill text-white" onclick="showPicker()">Select Color</a>
+                  <div class="colorPicker" align="center">
+                  </div>
+                </div>
+                <span style="color:gray" class="mt-2">Plan available to store?</span>
+                <div class="form-group col custom-switch custom-switch-label-yesno custom-switch-sm pl-0 mt-1 mb-2">
+                    <input class="custom-switch-input" id="checkBoxId" type="checkbox">
+                    <label class="custom-switch-btn" for="checkBoxId"></label>
+                </div>
+                <div>
+                    <span id="Warn" class='text-danger text-center'></span>
+                </div>
+                <div>
+                    <span id="unassignedPlanId" class='text-maroon text-center'></span>
+                </div>
+                <div class="ActionDiv row">
+                    <button id="addPlan" type="submit" class="btn rounded-pill btn-outline-info col ml-3 mr-3 mt-2" >
+                        <i class="fa-solid fa-plus"></i>
+                        Add</button>
+                    <button id="removePlan" type="submit" onclick="removeBtn()" class="btn rounded-pill btn-outline-danger col mr-3 ml-3 mt-2">
+                        <i class="fa-solid fa-xmark"></i>
+                        Remove</button>
+                </div>
+                </div>
+            @* </form>*@
+            @Html.HiddenFor(SubscriptionPlanId=>SubscriptionPlanId.PlanId)
+          </div>
+    </div>
+    <div class="planInput col" align="center" id="subscriptionPlanPreView"> 
+        <h3 class="mt-2 mb-4">Preview plan info</h3>
+        <div class="col-md-5 col-sm-5 text-center">
+                <div class="pricingTableDynamic" style="--inputColor:#eb4034">
+                    <div class="pricingTableDynamic-header">
+                        <div class="price-value" id="planPriceIdPreView"> ৳ <span class="month">per month</span> </div>
+                    </div>
+                    <h3 class="heading" id="planNameIdPreView"></h3>
+                    <div class="pricing-content">
+                        <ul>
+                            <li>Max <b id="uploadLimitIdPreview"></b> product upload</li>
+                               <li><b>Max</b> <span id="planSizeIdPreview"></span>Disk Space</li>                               
+                        </ul>
+                    </div>
+                    <div class="pricingTableDynamic-signup">
+                      <a href="#">Select</a>
+                    </div>
+                </div>
+                </div>
+    </div>
+</div>
+<div class="container" id="availableAllPlans">
+            <h3 class="mt-4 mb-2 text-center text-capitalize text-bold text-cyan">All Plans</h3>
+            <div class="row justify-content-md-center">
+             
+            @foreach(var plan in Model.getPublicPlans())
+            {
+                <div class="col-md-3 col-sm-6 m-4 text-center">
+                <div class="pricingTable" style="--inputColor:@plan.PlanColor" id="@plan.Id">
+                    <div class="pricingTable-header">
+                        <div class="price-value"> @plan.PlanPrice ৳ <span class="month">per month</span> </div>
+                    </div>
+                <h3 class="heading">@plan.PlanName</h3>
+                <div class="pricing-content">
+                    <ul>
+                        <li>Max <b>@plan.ProductUploadLimit</b> product upload</li>
+                                                @if (plan.StorageLimit >= 1024)
+                                                {
+                                                <li><b>Max @{var gb = (float)System.Math.Round((plan.StorageLimit / 1024), 2);}
+                                                <span>@gb</span>
+                                                 GB</b> Disk Space</li>}
+                                                else
+                                                {
+                                                    <li><b>Max @plan.StorageLimit MB</b> Disk Space</li>
+                                                }
+                                                               
+                    </ul>
+                </div>
+                <div class="pricingTable-signup">
+                  <a onclick="PlanChoosing('@plan.Id')">Select</a>
+                </div>
+                </div>
+                </div>
+            }
+            </div>
+        </div>
+@section Scripts{
+<!-- include the script -->
+<script src="~/alertifyjs/alertify.min.js"></script>
+ <!--Toggle Switch-->
+<script src="~/CustomSwitch/js/bootstrap4-toggle.min.js"></script>
+<!--Color Picker-->
+<script src="~/ColorPicker/iro.js"></script>
+
+<script>
+
+    function removeBtn(){
+
+        if($('#PlanId').val()==''){
+                $('#unassignedPlanId').show(); 
+                $('#unassignedPlanId').text('Unassigned plan.');
+                $('#unassignedPlanId').css('fontSize', '15px');
+
+                setTimeout(function() {
+                $('#unassignedPlanId').hide();
+                }, 3000);
+            }
+        var planName=$('#planNameId').val();
+        var Id=$('#PlanId').val();
+        if(Id.length>0){
+            removePlan(Id, planName);
+        }
+    }
+</script>
+
+<script>
+    var zoomArray=[];
+        function PlanChoosing(Id){
+            zoomArray.push(Id);
+            zoom();
+            editFeild(Id);
+        }
+        function zoom(){
+            if(zoomArray.length>1)
+                {
+                    $("#"+zoomArray[0]).animate({ 'zoom': 1 }, 300);
+                    zoomArray.shift();
+                }
+                $("#"+zoomArray[0]).animate({ 'zoom': 1.05 }, 300);
+        }
+</script>
+<script>
+    function editFeild(Id){
+        $.ajax({
+        url: '@Url.Action("GetPlan", "Subscription", "Admin")',
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        data: { 'Id': Id },
+        success: function(res) {
+            setValue(res['plan']);
+            scrollToPlanSetup();
+            //alert(res);
+
+        },
+        error: function () {
+                    //alertify.defaults.glossary.title = 'Problem.!';
+                    alertify.error('Error occured to perform this action.')
+                   }
+    });
+    }
+    function removePlan(Id, planName){
+        //console.log("Id: "+Id+" \nPlan name: "+planName);
+        $.ajax({
+        url: '@Url.Action("DeletePlan", "Subscription", "Admin")',
+        type: 'POST',
+        dataType: 'json', // added data type
+        cache: false,
+        data: { 'Id': Id },
+        success: function(results) {
+            alertify.success(planName+" "+results['message']);
+            $("#availableAllPlans").load(location.href + " #availableAllPlans");
+            removeFeild();
+            $('#PlanId').val('');
+            scrollToAllPlans();
+            //alert(res);
+
+        },
+        error: function () {
+                    //alertify.defaults.glossary.title = 'Problem.!';
+                    alertify.error('Error occured to perform this action.')
+                   }
+    });
+    }
+    function removeFeild(){
+        $('#planNameId').val('');
+        $('#planPriceId').val('');
+        $('#planUploadLimitId').val('');
+        $('#planSizeIdGB').val('');
+        $('#planSizeIdMB').val('');
+        $('.pricingTableDynamic').css('--inputColor', '#eb4034');
+        $('#checkBoxId').prop('checked', false);
+        textChange();
+    }
+</script>
+<script>
+    function setValue(plan){
+        //console.log(plan);
+        var Id=plan['id'];
+        var Color=plan['planColor'];
+        var Name=plan['planName'];
+        var Price=plan['planPrice'];
+        var UploadLimit=plan['productUploadLimit'];
+        var publicPlan=plan['publicPlan'];
+        var Storage=plan['storageLimit'];
+
+        var StorageGb=Math.trunc(Storage/1024);
+        var StorageMb=Math.trunc(Storage%1024);
+
+        //console.log("GB: "+StorageGb+"\nMB: "+StorageMb);
+        
+        $('#PlanId').val(Id);
+        $('#planNameId').val(Name);
+        $('#planPriceId').val(Price);
+        $('#planUploadLimitId').val(UploadLimit);
+        $('#planSizeIdGB').val(StorageGb);
+        $('#planSizeIdMB').val(StorageMb);
+        $('.pricingTableDynamic').css('--inputColor', Color);
+        (publicPlan)?$('#checkBoxId').prop('checked', true):$('#checkBoxId').prop('checked', false);
+        
+        textChange();
+    }
+</script>
+<script>
+    $('#addPlan').click(function(){
+        validation();
+    });
+    function validation(){
+        var Id=$('#PlanId').val();
+        var planName=$('#planNameId').val();
+        var planPrice=($('#planPriceId').val()==='')?0:$('#planPriceId').val();
+        var uploadLimit=($('#planUploadLimitId').val()==='')?0:$('#planUploadLimitId').val();
+        var storageLimit=getSimplifiedValueMB();
+        var cardColor=$('.pricingTableDynamic').css('--inputColor');
+        var publicPlan=$('#checkBoxId').is(":checked")?true:false;
+        var result=validateFeilds();
+        
+       
+        if(result)
+            {
+                if(Id==='')
+                {
+                    createPlan(planName, planPrice, uploadLimit, storageLimit, cardColor, publicPlan);
+                }
+                else 
+                {
+                    //console.log(Id);
+                    editPlan(Id, planName, planPrice, uploadLimit, storageLimit, cardColor, publicPlan);
+                }
+                //console.log("done");
+                
+                
+                //$("#availableAllPlans").load(location.href + " #availableAllPlans");
+            }
+
+    }
+   
+    function validateFeilds(){
+        var planName=$('#planNameId').val();
+        var planPrice=$('#planPriceId').val();
+        var uploadLimit=$("#planUploadLimitId").val();
+        var storageLimit=getSimplifiedValueMB();
+        
+        if(planName.length==0 || planPrice==='' || planPrice<0 || uploadLimit==='' || uploadLimit<0 || storageLimit==='' || storageLimit<0){
+
+            $('#addPlan').prop('disabled', true);
+            $('#Warn').show(); 
+            $('#Warn').text('Fill all feilds with valid values');
+            $('#Warn').css('fontSize', '20px');
+            return false;
+        }
+        else
+            {
+                $('#Warn').hide(); 
+                $('#addPlan').prop('disabled', false);
+                return true;
+            }
+    }
+    function fillRequiredFeild(){
+        alertify.error('Fill.')
+    }
+</script>
+
+
+<script>
+    function editPlan(Id, planName, planPrice, uploadLimit, storageLimit, cardColor, publicPlan){
+         var card = new Object();
+         card.PlanId=Id;
+         card.PlanName=planName;
+         card.PlanPrice=parseFloat(planPrice);
+         card.ProductUploadLimit=parseFloat(uploadLimit);
+         card.StorageLimit=parseFloat(storageLimit);
+         card.PlanColor=cardColor;
+         card.publicPlan=publicPlan;
+         //console.log(JSON.stringify(card));
+        $.ajax({
+                   url: '@Url.Action("Edit", "Subscription", "Admin")',
+                   type: 'POST',
+                   dataType: 'json',
+                   cache: false,
+                   data: { jsonInput: JSON.stringify(card)},
+                   success: function (results) {
+                       //console.log(results);
+                       var BoolResult=results['action'];
+                       if(BoolResult){
+                           alertify.success(planName+" "+results['message']);
+                           $("#availableAllPlans").load(location.href + " #availableAllPlans");
+                           scrollToAllPlans();
+                           //console.log(BoolResult);
+                       }else{
+                           alertify.error(results['message']);
+                           //console.log(BoolResult);
+                       }
+                   },
+                   error: function () {
+                    //alertify.defaults.glossary.title = 'Problem.!';
+                    alertify.error('Error occured to perform this action.')
+                   }
+                   });
+    }
+</script>
+
+
+
+
+<script>
+     function createPlan(planName, planPrice, uploadLimit, storageLimit, cardColor, publicPlan){
+         var card = new Object();
+         card.PlanName=planName;
+         card.PlanPrice=parseFloat(planPrice);
+         card.ProductUploadLimit=parseFloat(uploadLimit);
+         card.StorageLimit=parseFloat(storageLimit);
+         card.PlanColor=cardColor;
+         card.publicPlan=publicPlan;
+         //console.log(JSON.stringify(card));
+        $.ajax({
+                   url: '@Url.Action("CreatePlan", "Subscription", "Admin")',
+                   type: 'POST',
+                   dataType: 'json',
+                   cache: false,
+                   data: { jsonInput: JSON.stringify(card)},
+                   success: function (results) {
+                       //console.log(results);
+                       var BoolResult=results['action'];
+                       if(BoolResult){
+                           alertify.success(planName+" "+results['message']);
+                           removeFeild();
+                           $("#availableAllPlans").load(location.href + " #availableAllPlans");
+                           scrollToAllPlans();
+                           //console.log(BoolResult);
+                       }else{
+                           alertify.error(results['message']);
+                           //console.log(BoolResult);
+                       }
+                   },
+                   error: function () {
+                    //alertify.defaults.glossary.title = 'Problem.!';
+                    alertify.error('Error occured to perform this action.')
+                   }
+                   });
+    }
+</script>
+
+<script>
+    function scrollToAllPlans() {
+    $('html, body').animate({
+        scrollTop: $("#availableAllPlans").offset().top
+    }, 1500)}
+    function scrollToPlanSetup() {
+    $('html, body').animate({
+        scrollTop: $("#subscriptionPlannel").offset().top
+    }, 1500)}
+</script>
+<script>
+    function showPicker(){
+        $('#pickerButton').hide();
+        var colorPicker= new iro.ColorPicker('.colorPicker',{
+              width: 100,
+              color: "rgb(255, 0, 0)",
+              borderWidth: 1,
+              borderColor: "#fff",
+        });
+
+        colorPicker.on(["color:init", "color:change"], function(color){
+
+            $('.pricingTableDynamic').css('--inputColor', color.hexString);
+           
+        });
+    }
+</script>
+<script>
+function textChange(){
+    $('#planPriceIdPreView').text($('#planPriceId').val()+' ৳');
+    $('#planPriceIdPreView').append('<span class="month">per month</span>');
+    $('#planNameIdPreView').text($('#planNameId').val());
+    $('#uploadLimitIdPreview').text($('#planUploadLimitId').val());
+    if(getSimplifiedValueMB()<1024){
+        $('#planSizeIdPreview').text(getSimplifiedValueMB());
+        $('#planSizeIdPreview').append('<b> MB </b>');
+    }
+    else{
+        $('#planSizeIdPreview').text(getSimplifiedValueGB());
+        $('#planSizeIdPreview').append('<b> GB </b>');
+    }
+    
+    //runtime validation
+    var validationResult=validateFeilds();
+}
+function getSimplifiedValueMB(){
+    var gb= ($('#planSizeIdGB').val()==='')?0:$('#planSizeIdGB').val();
+    var mb= ($('#planSizeIdMB').val()==='')?0:$('#planSizeIdMB').val();
+    var resultMb=(gb*1024)+(mb*1);//all in mb
+   
+    return resultMb;
+}
+function getSimplifiedValueGB(){
+    var gb= ($('#planSizeIdGB').val()==='')?0:$('#planSizeIdGB').val();
+    var mb= ($('#planSizeIdMB').val()==='')?0:$('#planSizeIdMB').val();
+    var resultMb=(gb*1024)+(mb*1);//all in mb
+    
+    var finalGb=(resultMb/1024);//.toFixed(4);
+    var finalMb=resultMb%1024;
+    //console.log("GB: "+finalGb);
+    //console.log("MB: "+finalMb);
+    if(finalMb<10)
+        finalMb="0.00"+finalMb;
+    else if(finalMb<100)
+        finalMb="0.0"+finalMb;
+    else if(finalMb<1000)
+        finalMb="0."+finalMb;
+    if(resultMb%1024==0)
+        finalGb=Math.trunc(resultMb/1024);
+    else if(finalMb<10)
+        finalGb=finalGb.toFixed(3);
+    else if(finalMb<100)
+        finalGb=finalGb.toFixed(2);
+    else if(finalMb<1000)
+        finalGb=finalGb.toFixed(1);
+    finalGb=parseFloat(finalGb);
+
+    return finalGb//+finalMb;
+}
+</script>
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Login-Register</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link 
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="assets/img/favicon.png"
+    />
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- ======== CSS here ======== -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/lineicons.css" />
+    <link rel="stylesheet" href="assets/css/animate.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+  </head>
+  <body>
+    <!--[if lte IE 9]>
+      <p class="browserupgrade">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="https://browsehappy.com/">upgrade your browser</a> to improve
+        your experience and security.
+      </p>
+    <![endif]-->    
+
+    <!-- ======== preloader start ======== -->
+    <div class="preloader">
+      <div class="loader">
+        <div class="spinner">
+          <div class="spinner-container">
+            <div class="spinner-rotator">
+              <div class="spinner-left">
+                <div class="spinner-circle"></div>
+              </div>
+              <div class="spinner-right">
+                <div class="spinner-circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- preloader end -->
+
+    <section id="login_register_form">
+      <div class="form_box">
+        <div class="buttons d-flex">
+          <div id="active_button"></div>
+          <button type="button" class="toggle-btn"><strong onclick="login()">Login</strong></button>
+          <button type="button" class="toggle-btn"><strong onclick="register()">Register</strong></button>
+        </div>
+        <!-- <div class="social-icons mb-30">
+          <ul class="d-flex justify-content-center">
+            <li><a href=""><i class="lni lni-google text-danger"></i></a></li>
+            <li><a href=""><i class="lni lni-facebook-filled text-primary"></i></a></li>
+          </ul>
+        </div> -->
+        
+        <form role="form" asp-area="" asp-controller="" asp-action="" method="post" asp-antiforgery="true" class="input_group" id="login">
+          
+          <div class="mb-3 ">
+            <label for="login_email" class="form-label"><strong>E-mail</strong></label>
+            <input type="email" class="form-control customInput" id="login_email" placeholder="Enter your E-mail" required>
+          </div>
+          <div class="mb-3 mt-3">
+            <label for="login_password" class="form-label"><strong>Password</strong></label>
+            <input type="password" class="form-control customInput" id="login_password" placeholder="Enter your Password" required>           
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="login_check">
+            <label class="form-check-label" for="login_check">Remember me</label>
+          </div>
+          
+          <div class="col text-center">
+            <button type="submit" class="main-btn btn-hover">Submit</button>
+          </div>
+        </form>
+
+        <form role="form" asp-area="" asp-controller="" asp-action="" method="post" asp-antiforgery="true" class="input_group" id="register">
+          
+          <div class="mb-3 ">
+            <label for="register_email" class="form-label"><strong>E-mail</strong></label>
+            <input type="email" class="form-control customInput" id="register_email" placeholder="Enter a valid E-mail" required>
+          </div>
+          <div class="mb-3 mt-3">
+            <label for="register_password" class="form-label"><strong>Password</strong></label>
+            <input type="password" class="form-control customInput" id="register_password" placeholder="Use:   A ~ Z, a ~ b, 0 ~ 9, ! @ # $ % ^ & * \ /" required>           
+          </div>
+          <div class="mb-3 mt-3">
+            <label for="register_confirmPassword" class="form-label"><strong>Confirm Password</strong></label>
+            <input type="password" class="form-control customInput" id="register_confirmPassword" placeholder="Retype your password" required>           
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="register_check">
+            <label class="form-check-label" for="register_check">I agree with the terms & conditions</label>
+          </div>
+          
+          <div class="col text-center">
+            <button type="submit" class="main-btn btn-hover">Register</button>
+          </div>
+        </form>
+      </div>
+    </section>
+    <script>
+      var log = document.getElementById("login");
+      var reg = document.getElementById("register");
+      var activeButton = document.getElementById("active_button");
+
+      function register(){
+        log.style.display = "none";
+        reg.style.display = "block";
+        activeButton.style.left = "110px";
+      }
+
+      function login(){
+        log.style.display = "block";
+        reg.style.display = "none";
+        activeButton.style.left = "0px";
+      }
+
+    </script>
+
+    
+
+    <!-- ======== scroll-top ======== -->
+    <a href="#" class="scroll-top btn-hover">
+      <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <!-- ======== JS here ======== -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

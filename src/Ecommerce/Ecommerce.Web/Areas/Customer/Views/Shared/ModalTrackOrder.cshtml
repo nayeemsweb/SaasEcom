@@ -1,0 +1,64 @@
+﻿
+<!-- Modal -->
+        <div class="modal fade" id="modal-track" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content text-white" style="background-color: #6d5b98; border-radius: 10px;">
+              <div class="modal-header border-bottom-0">
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal"
+                  aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-start px-4 pt-0 pb-4">
+                <div class="text-center">
+                  <h5 class="mb-3">Order Status</h5>
+                  <h5 class="mb-5" id="orderNumber"></h5>
+                </div>
+
+                <div class="d-flex justify-content-between mb-5" id="trackStatus">
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Shipped</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p class="lead fw-normal">Canceled</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Archived</p>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-md-4 text-center">
+                    <p class="lead fw-normal">Shipped with</p>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <p class="lead fw-normal">Sundarban Courier</p>
+                  </div>
+                  
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-md-4 text-center">
+                    <p class="lead fw-normal">Estimated Delivery</p>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <p class="lead fw-normal">@DateTime.Now.AddDays(6).ToShortDateString()</p>
+                  </div>
+                  
+                </div>
+
+              </div>
+            </div>
+          </div>
+ </div>
+

@@ -1,0 +1,317 @@
+﻿@model CartModel
+@{
+    ViewData["Title"] = "ShoppingCart";
+    var dataIdValue = 1;
+    decimal totalPrice = 0;
+}
+@section Styles{
+    <style>
+
+        #stickyCart{
+            display:none;
+        }
+
+        #shop:hover{
+            background-color:#7FAD39;
+        }
+        input[type='number'] {
+            -moz-appearance:textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        #nameHover:hover{
+            color:#FFC107;
+        }
+
+    </style>
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/Ecommercetheme/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Shopping Cart</h2>
+                    <div class="breadcrumb__option">
+                        <a href="./index.html">Home</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shoping Cart Section Begin -->
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__table">
+                    <table id ="tbl">
+                        <thead>
+                            <tr>
+                                <th class="shoping__product">Products</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id = "tblBody">
+                            @foreach(var item in Model.CartItems){
+                                var value = @item.Price * @item.Quantity;
+                                totalPrice+= @item.Price * @item.Quantity;
+                                <tr id="rec-@dataIdValue">
+                                <td class="shoping__cart__item">
+                                    <a href="/customer/shop/product/@item.ProductId" >
+                                        <img src="/admin/image?url=@item.ImageUrl&w=50&h=50" alt=""
+                                    >
+                                    </a>
+                                    
+                                    <a href="/customer/shop/product/@item.ProductId" >
+                                    <h5 id="nameHover">@item.Name</h5>
+                                    </a>
+                                </td>
+                                <td class="shoping__cart__price">
+                                    
+                                   ৳<span class="product__price">@item.Price</span> 
+                                </td>
+                                <td class="shoping__cart__quantity" data-id=@dataIdValue>
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <input id=@dataIdValue
+                                            type="number" class="pro-input-qty"
+                                            min="0"
+                                            value=@item.Quantity 
+                                            >
+                                            <input type="hidden" id=@item.ProductId 
+                                             />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="shoping__cart__total" data=@value data-id=@dataIdValue>
+                                   ৳ <span class="product__total">@value</span> 
+                                </td>
+                                <td class="shoping__cart__item__close" data-id=@dataIdValue>
+                                    <input type="hidden" id="prodId" value=@item.ProductId />   
+                                    <span class="icon_close"></span>
+                                </td>
+                                </tr>
+                                dataIdValue++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="shoping__cart__btns d-flex justify-content-end ">     
+                   <a href="/customer/shop/shopgrid" class="primary-btn cart-btn" id="shop">CONTINUE SHOPPING</a>  
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__continue">
+                    <div class="shoping__discount">
+                        <h5>Discount Codes</h5>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your coupon code">
+                            <button type="submit" class="site-btn">APPLY COUPON</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__checkout">
+                    <h5>Cart Total</h5>
+                    <ul>
+                        
+                        <li>Total <span id="total_cart_amount">৳ @totalPrice</span></li>
+                    </ul>
+                    <a href="/customer/shop/checkout" class="primary-btn">PROCEED TO CHECKOUT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shoping Cart Section End -->
+
+@section Scripts{
+    
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        
+    $('.shoping__cart__item__close').click(function(e){
+         Swal.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+        //var productId = $('#prodId').val();
+        var productId = e.target.previousElementSibling.defaultValue;
+       // console.log(e.target.firstChild.children[1]);
+        var id = $(this).attr('data-id');
+        //id--;
+        console.log(productId);
+        let storeItems = localStorage.getItem("cartItems");
+        if(storeItems != null)
+        {
+            let jsonData = JSON.parse(storeItems);
+            let indexToDelete=0;
+            for(let i=0;i<jsonData.item1.length;i++){
+                console.log(jsonData.item1[i]);
+                if(jsonData.item1[i].productId==productId){
+                    console.log(jsonData.item1[i].productId);
+                    console.log(productId);
+                    indexToDelete = i;
+                    break;
+                }
+            }
+            let item1 = jsonData.item1.filter(item => item.productId!=productId);
+            console.log(indexToDelete);
+            let item2 = jsonData.item2.filter((item,index)=>{
+                return index!=indexToDelete;
+            });
+            console.log('remaining items: ' + item2);
+            let cartObject = {'item1':item1,'item2':item2};
+            console.log(cartObject);
+            localStorage.setItem('cartItems', JSON.stringify(cartObject));
+            console.log(item1);
+            console.log(item2);
+            
+            let allItems = localStorage.getItem("cartItems");
+            if(allItems != null)
+            {
+                let data = JSON.parse(allItems);
+                $("#cart-count").text(data.item1.length);
+                $("#itemCountPara").text(data.item1.length + " " + 'ITEMS');
+                const sum = data.item2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+                $(".cartMoney").text(`৳ ${sum}`);
+            }
+        }
+
+        console.log(e);
+        console.log(id);
+        var targetDiv = $(this).attr('targetDiv');
+        $('#rec-' + id).remove();
+
+        console.log(productId);
+        $.post(`/Customer/Shop/DeleteProduct/?Id=${productId}`,
+            function (data) {
+                updateTotalCart();
+            }).fail(function (data) {
+               console.log(data);
+        })
+    }});
+
+    });
+
+    </script>
+
+    <script>
+    
+    $(document).on('change', '.pro-input-qty', function(e) {
+          if(this.value < 0)
+          {
+             let currentInput = $(this);
+             Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "negative value is not allowed as quantity!",
+           })
+             currentInput.parent().find('input').val(1);
+             let input = $(this);
+             callDatabase(e,input,1);
+          }
+          else if(this.value==0)
+          {
+             let currentInput = $(this);
+             Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "zero is not allowed as quantity!",
+           })
+             currentInput.parent().find('input').val(1);
+             
+             let input = $(this);
+             callDatabase(e,input,1);
+          }
+          else
+          {
+           // console.log(e);
+           let currentInput = $(this);
+           callDatabase(e,currentInput,this.value);
+            //const productId = e.target.nextElementSibling.id;
+            //var value = this.value;
+            
+            //let productTR = currentInput.closest('tr');
+            //let price = productTR.find('.shoping__cart__price')[0].innerText;
+            //price = parseFloat(price.slice(1));  
+            //let amount = productTR.find('.product__total');
+            //amount[0].innerText = (price * this.value).toFixed(2);
+            //updateTotalCart();
+            //updateCart(productId,value);  
+          }
+        });
+
+           function callDatabase(event,currentInput,value){
+                const productId = event.target.nextElementSibling.id;
+               
+               // let currentInput = $(inp);
+                let productTR = currentInput.closest('tr');
+                let price = productTR.find('.shoping__cart__price')[0].innerText;
+               
+                price = parseFloat(price.slice(1));  
+                let amount = productTR.find('.product__total');
+                amount[0].innerText = (price * value).toFixed(2);
+                updateTotalCart();
+                updateCart(productId,value); 
+           } 
+
+          function updateTotalCart()
+        {
+            let products = document.querySelectorAll('.product__total');
+            let total = 0;
+            Array.from(products).map((c)=> {
+                total += parseFloat(c.innerText);
+            });
+            $("#total_cart_amount").html("৳" + total.toFixed(2));
+        }
+
+        function updateCart(productId,quantity){
+            let cartObject = {
+                ProductId: productId,
+                Quantity: quantity
+            };
+            $.post("/Customer/Cart/Edit",
+            { model: cartObject },
+            function (data){
+                localStorage.setItem("cartItems", JSON.stringify(data));
+                let storeItems = localStorage.getItem("cartItems");
+                let jsonData = JSON.parse(storeItems);
+                const sum = jsonData.item2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+                $(".cartMoney").text(`৳ ${sum}`);
+
+    }).fail(function (data) {
+        console.log(data);
+    });
+
+    }; 
+
+
+    </script>
+
+
+}

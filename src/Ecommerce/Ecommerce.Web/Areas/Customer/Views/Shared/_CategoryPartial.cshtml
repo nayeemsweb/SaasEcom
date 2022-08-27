@@ -1,0 +1,31 @@
+﻿@model ShopIndexModel
+<style>
+    #scroll{
+     max-height: 450px;
+    margin-bottom: 10px;
+     overflow-y: scroll;
+     scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    }
+    #scroll::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+</style>
+
+<div class="hero__categories">
+    <div class="hero__categories__all">
+        <i class="fa fa-bars"></i>
+        <span>All Categories</span>
+    </div>
+    <ul id="scroll">
+         @foreach (var item in Model.GetCategories())
+         {
+            @if (item.Name != "default")
+            {
+                <li><a href="/Customer/Shop/Category/@item.Id" target="_blank">@item.Name</a></li>
+            }
+         }
+    </ul>
+</div>

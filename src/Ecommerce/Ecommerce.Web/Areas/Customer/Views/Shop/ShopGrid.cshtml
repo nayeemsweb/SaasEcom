@@ -1,0 +1,424 @@
+﻿@using Newtonsoft.Json
+@model ProductModel
+@{
+    ViewData["Title"] = "ShopGrid";
+    var count = 0;
+    var skip=0;
+}
+@section Styles{
+
+    <!-- toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+    <style>
+         .set-bg
+        {
+            cursor:pointer;
+        }
+
+
+        .product__item__pic__hover li #addToWishlist  {
+	        font-size: 16px;
+	        color: #1c1c1c;
+	        height: 40px;
+	        width: 40px;
+	        line-height: 40px;
+	        text-align: center;
+	        border: 1px solid #ebebeb;
+	        background: #ffffff;
+	        display: block;
+	        border-radius: 50%;
+	        -webkit-transition: all, 0.5s;
+	        -moz-transition: all, 0.5s;
+	        -ms-transition: all, 0.5s;
+	        -o-transition: all, 0.5s;
+	        transition: all, 0.5s;
+        }
+
+    
+        .product__item__pic__hover li #addToWishlist i {
+	        position: relative;
+	        transform: rotate(0);
+	        -webkit-transition: all, 0.3s;
+	        -moz-transition: all, 0.3s;
+	        -ms-transition: all, 0.3s;
+	        -o-transition: all, 0.3s;
+	        transition: all, 0.3s;
+        }
+        .product__item__pic__hover li:hover #addToWishlist {
+	        background: #7fad39;
+	        border-color: #7fad39;
+        }
+
+        .product__item__pic__hover li:hover #addToWishlist i {
+	        color: #ffffff;
+	        transform: rotate(360deg);
+        }
+
+        
+         #scroll{
+         max-height: 450px;
+        margin-bottom: 10px;
+         overflow-y: scroll;
+         scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+        }
+        #scroll::-webkit-scrollbar { /* WebKit */
+        width: 0;
+        height: 0;
+        }
+    </style>
+}
+
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/EcommerceTheme/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Organi Shop</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/customer/shop">Home</a>
+                        <span>Shop Grid</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Categories</h4>
+                        <ul id="scroll">
+                             @foreach (var item in Model.GetCategories())
+                             {
+
+                                @if (item.Name != "default")
+                                {
+                                    <li><a href="/Customer/Shop/Category/@item.Id" target="_blank">@item.Name</a></li>
+                                }
+                             }
+                        </ul>
+                    </div>
+                    @*<div class="sidebar__item">
+                        <h4>Price</h4>
+                        <div class="price-range-wrap">
+                            <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                 data-min="50" data-max="1200">
+                                <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                            </div>
+                            <div class="range-slider">
+                                <div class="price-input">
+                                    <input type="text" id="minamount" asp-for="MinimumAmount">
+                                    <input type="text" id="maxamount" asp-for="MaximumAmount">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>*@
+                    
+                    <div class="sidebar__item">
+                        <div class="latest-product__text">
+                            <h4>Latest Products</h4>
+                            <div class="latest-product__slider owl-carousel">
+                                <div class="latest-prdouct__slider__item">
+                                    @foreach (var item in Model.GetLatestProducts())
+                                         {
+                                            @if(count==3){
+                                                break;
+                                            }  
+                                        @if (item.ActiveStatus==true)
+                                            {
+                                               <a href="#" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img src=/admin/image?url=@item?.ProductImages[0]?.Url&w=50&h=50 alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@item.Name</h6>
+                                                        <span>৳ @item.UnitPrice</span>
+                                                    </div>
+                                                </a>
+                                            count++;
+                                        }
+                                         }
+                            
+                                    
+                                </div>
+                                <div class="latest-prdouct__slider__item">
+                                    @foreach (var item in Model.GetLatestProducts())
+                                         {
+                                            @if(count==9){
+                                                break;
+                                            }  
+                                        @if (item.ActiveStatus==true && skip>3)
+                                            {
+                                               <a href="#" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        <img src=/admin/image?url=@item?.ProductImages[0]?.Url&w=50&h=50 alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@item.Name</h6>
+                                                        <span>৳ @item.UnitPrice</span>
+                                                    </div>
+                                                </a>
+                                            
+                                        }
+                                        count++;
+                                        skip++;
+                                    }
+                            
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7" id="mainDiv">
+                
+                <div class="filter__item">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-5">
+                            <div class="filter__sort">
+                                <span>Sort By</span>
+                                <select id="mySelect">
+                                    <option value="0">Name</option>
+                                    <option value="1">Price</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4" id ="scroller">
+                            <div class="filter__found">
+                                <h6><span>@Model.GetProductsCount()</span> Products found</h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="filter__option">
+                                <span class="icon_grid-2x2"></span>
+                                <span class="icon_ul"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="products">
+                    @foreach (var item in Model.Products)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6" id="productList">
+                            <div class="product__item">
+
+                                <div class="product__item__pic set-bg" data={@item.Id} data-setbg=/admin/image?url=@item.ProductImages[0].Url&w=500&h=500>
+                                    
+                                    <ul class="product__item__pic__hover">
+                                        <li><button id="addToWishlist" value=@item.Id><i class="fa fa-heart"></i></button></li>
+              
+                                        <li><a class="addCart" data-id=@item.Id><i class="fa fa-shopping-cart"></i></a>
+               
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="/Customer/Shop/Product?Id=@item.Id">@item.Name</a></h6>
+                                    <h5>৳ @item.UnitPrice</h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                  
+                </div>
+                <div class="product__pagination " id="links">
+                  
+                    <a href="#" class="pageLink">1</a>
+                    <a href="#" class="pageLink">2</a>
+                    <a href="#" class="pageLink">3</a>
+                    <a href="#" class="pageLink">4</a>
+                 @*   <a href="#" class="nextLink">
+                    <i class="fa fa-long-arrow-right"></i></a>*@
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Product Section End -->
+
+
+@section Scripts{
+ 
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+<script>
+
+     var obj = {
+         text:'name',
+         pageIndex:1,
+         currentIndex:1
+     }
+
+    $(document).on('change','#mySelect' ,function(){
+     var text1 = $('#mySelect option:selected').text().toLowerCase();
+     if(text1=='price')
+        obj.text = 'unitprice';
+     else 
+        obj.text = text1;
+     console.log(text1);
+     callServer(obj);
+
+    });
+    var values  = $('#mySelect option:selected').text();
+    console.log(values);
+   
+
+    $('.price-input').on('input change ', function(e){
+
+    console.log(obj.text1);
+
+    var values2  = $('#minamount').val().substring(1);
+
+    var values3  = $('#maxamount').val().substring(1);
+
+    console.log(values2 + " " + values3);
+    })
+
+    $('a').click(function(e){
+            if(e.target.className=='pageLink' || e.target.className=='nextLink')
+            {
+                e.preventDefault();
+                var index= $(this).text();
+                if(e.target.className=='nextLink')
+                   obj.pageIndex= parseInt(obj.currentIndex)+1;
+                
+                else{ 
+                   obj.pageIndex = parseInt(index);
+                   obj.currentIndex = index;
+                }
+                console.log(obj);
+                callServer(obj);
+             }
+    });
+
+    $("#hrf").click(function(e){
+        console.log('clicked href');
+        console.log( e);
+    });
+  
+  
+  $('body').on("click","#addToWishlist",function(e){
+    
+    
+    var Id = $(this).val();
+    console.log(Id);
+    $.ajax(
+            {
+                type: "POST",
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                url: `/Customer/Shop/Wishlist?Id=${Id}`,
+                success: function (response) {
+                    console.log(response);
+                    if(response.success==true){
+                        let wishCount = parseInt($("#wish-count").text());
+                        $("#wish-count").text(wishCount+1);
+                        toastr.success('The item is succesfully added in the wishlist!');
+                    }
+                },
+                error: function (request, status, error) {
+                   toastr.error('The item is already in the wishlist!');
+                }
+                 
+            }
+    )
+ });
+
+
+    function callServer(obj) {
+         $.ajax(
+            {
+                type: "GET",
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                url: "/Customer/Shop/GetProducts",
+                data: {
+                    
+                    SortOrder:obj.text,
+                    PageIndex:obj.pageIndex
+                },
+                 success: function(data) {
+                   console.log(data);
+                   const productList = document.querySelector('#products');
+
+                   productList.innerHTML = '';
+
+                   $.each(data.filteredProducts, function(index, item) {
+
+                      var image = `/admin/image?url=${item.productImages[0].url}&w=800&h=800`;
+                      console.log(image);
+                      console.log(typeof(item));
+
+                       var val=`<div class="col-lg-4 col-md-6 col-sm-6" id="productList">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" data=${item.id} data-setbg=${image}>
+                              
+                                <ul class="product__item__pic__hover">
+                                     <li> <button id="addToWishlist"
+                                    value=${item.id} > <i class="fa fa-heart" > </i> </button> </li>
+                                    <li><a class="addCart" data-id=${item.id}><i class="fa fa-shopping-cart"></i></a>
+                                    
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="/Customer/Shop/Product?Id=${item.id}" id='hrf'>${item.name}</a></h6>
+                                <h5>৳ ${item.unitPrice}</h5>
+                            </div>
+                        </div>
+                    </div>`;
+                    productList.innerHTML+=val;
+
+                   
+                   //setting background picture 
+                   $('.set-bg').each(function () {
+                        console.log('inside set bg');
+                        var bg = $(this).data('setbg');
+                        $(this).css('background-image', 'url(' + bg + ')');
+                    });
+
+                    window.scrollTo({ top: 0, behavior: 'smooth'});
+                    
+                });
+
+            },
+    });
+
+ }
+
+</script>
+
+<script>
+    $('body').on('click','.set-bg',function(e){
+        console.log(e);
+        var id = e.currentTarget.attributes[1].value;
+        console.log(id);
+        document.location.href = `/Customer/Shop/Product?Id=${id}`;
+    });
+
+    </script>
+
+
+<script src="/Scripts/Shop/ShopGrid.js"></script>
+
+}

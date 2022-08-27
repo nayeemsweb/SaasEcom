@@ -1,0 +1,369 @@
+﻿
+@{
+    ViewData["Title"] = "TestSetup";
+}
+@section Styles{
+   <!-- Required meta tags -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/AdminLTE/SetupWizard/styles/css/main.css">
+
+    <link href="~/lib/font-awesome/css/all.css">
+
+      <!-- dropzonejs -->
+        <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+
+}
+    <main class="container mt-5 pt-5">
+
+        <form class="wizard" method="post" enctype="multipart/form-data">
+            <aside class="wizard-content container">
+                <div class="wizard-step">
+                    <div class="form-group mb-5 w-50 mx-auto">
+                        <h2 class="text-center">Tell us a little about yourself</h2>
+                        <p class="text-center">We’ll help you get started based on your responses</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="aboutSellingInfo">Are you already selling?</label>
+                        <select class="form-control" name="action">
+                            <option value="">Please choose one ...</option>
+                            <option value="0">I'm just playing around</option>
+                            <option value="1">I'm not selling product yet</option>
+                            <option value="2">I'm selling, just not online</option>
+                            <option value="3">I sell with a different system</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aboutCurrentRevenueInfo">What is your current revenue?</label>
+                        <select class="form-control" name="action">
+                            <option value="">Please choose one ...</option>
+                            <option value="0">৳0 BDT (I'm just getting started)</option>
+                            <option value="1">Up to ৳5,000 BDT</option>
+                            <option value="2">৳5,000 BDT to ৳50,000 BDT</option>
+                            <option value="3">৳50,000 BDT to ৳250,000 BDT</option>
+                            <option value="4">৳250,000 BDT to ৳1,000,000 BDT</option>
+                            <option value="5">৳1,000,000 BDT+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aboutOperatingIndustryInfo">Which industry will you be operating in?</label>
+                        <select class="form-control" name="action" required>
+                            <option selected disabled  value="">Please choose one ...</option>
+                            <option value="0">Beauty</option>
+                            <option value="1">Clothing</option>
+                            <option value="2">Electronics</option>
+                            <option value="3">Furniture</option>
+                            <option value="4">Handcrafts</option>
+                            <option value="5">Jewelry</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="wizard-step">
+                    <<div class="form-group mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Set basic info to start</h3>
+                        <p class="text-center">This will be viewed to customer.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="StoreName">Store Name</label>
+                        <input type="text" name="body" class="form-control required banner-info" id="StoreName"
+                            placeholder="Sultan dine">
+                    </div>
+                    <div class="form-group">
+                        <label for="StoreTitle">Store Title</label>
+                        <input type="text" name="body" class="form-control required banner-info" id="StoreTitle"
+                            placeholder="Good Food, Good Life.">
+                    </div>
+
+        <!--Image upload section-->
+        
+                        <!--icon upload-->
+                      <div class="card-body">
+                                    <div id="actions" class="container col-2">
+                                                <div class="text-center mb-2">
+                                                    <img class="rounded-circle w-100" src="https://rb.gy/vtpmbe" alt=""/>
+                                                </div>
+                                              <div class="text-center">
+                                                    <div class="btn-group w-10">
+                                                           <button type="button" class="btn btn-primary rounded-pill col fileinput-button start">
+                                                                <i class="fas fa-upload"></i>
+                                                                <span><small>Add Icon</small></span>
+                                                            </button>
+                                                            <button type="reset" class="btn btn-warning col cancel" hidden>
+                                                            <i class="fas fa-times-circle"></i>
+                                                            <span>Cancel upload</span>
+                                                            </button>
+                                                    </div>
+                                              </div>
+                                             <div class="text-center">
+                                                <div class="fileupload-process w-100" hidden>
+                                                  <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                    </div>
+                                    
+                       
+
+
+                                      <div class="files" id="previews">
+                                  
+                                                  <div id="template" class="mt-2">
+                                                            <div class="container col-2">
+                                                                <div class="text-center mb-2">
+                                                                    <span class="preview"><img class="rounded-circle shadow-sm w-100" src="data:," alt="" data-dz-thumbnail /></span>
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="mb-0" hidden>
+                                                                        <span class="lead" data-dz-name></span>
+                                                                        (<span data-dz-size></span>)
+                                                                    </p>
+                                                                    <strong class="error text-danger" data-dz-errormessage hidden></strong>
+                                                                </div>
+                                        
+                                                                <div class="text-center">
+                                                                    <div class="progress progress-striped active w-100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                
+                                                          <div class="container col-4 mt-2">
+                                                            <div class="text-center">
+                                                              <div class="btn-group">
+                                                                    <button class="btn btn-primary rounded-pill mr-1 start">
+                                                                      <i class="fas fa-upload"></i>
+                                                                      <span><small>Upload</small></span>
+                                                                    </button>
+                                                                    <button data-dz-remove class="btn btn-warning rounded-pill ml-1 cancel" onclick="showIconActionDiv()">
+                                                                      <i class="fas fa-times-circle"></i>
+                                                                      <span><small>Cancel</small></span>
+                                                                    </button>
+                                                                    <button data-dz-remove class="btn btn-danger delete" hidden>
+                                                                      <i class="fas fa-trash"></i>
+                                                                      <span>Delete</span>
+                                                                    </button>
+                                                              </div>
+                                                          </div>
+                                                          </div>
+                                                        
+                                                </div>
+                                                  
+                                      </div>
+                      </div>
+                      <!--/icon upload-->
+                   
+                      
+        <!--/Image upload section-->
+        <!-- /.row -->
+
+
+
+     
+            
+
+
+                    <div class="form-group">
+                        <label for="descShop">Describe about your shop</label>
+                        <textarea name="description" class="form-control" id="descShop"></textarea>
+                    </div> 
+                </div>
+                <div class="wizard-step">
+                    <<div class="form-group mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Add your shop info</h3>
+                        <p class="text-center">Virtual address of your shop will be here.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shopUrl">Shop URL</label>
+                        <input type="url" name="shopUrl" class="form-control" id="shopUrl"
+                            placeholder="www.peranaichill.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="EmailAddress">Shop Email Address</label>
+                        <input type="email" name="shopEmail" class="form-control" id="EmailAddress"
+                            placeholder="mail@pernaichill.com" required>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="PhoneNumber">Phone Number</label>
+                        <input type="tel" name="shopPhoneNumber" class="form-control" id="PhoneNumber"
+                            placeholder="01711111112" required>
+                        </div>
+                        <div class="form-group col">
+                        <label for="PhoneNumber">Phone Number</label>
+                        <input type="tel" name="shopPhoneNumber" class="form-control" id="PhoneNumber"
+                            placeholder="01711111113 (optional)">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="socailPlatformAddress">Facebook Page Handle</label>
+                        <input type="text" name="shopSocialPlatform" class="form-control" id="socailPlatformAddress"
+                            placeholder="chill.pernai">
+                        </div>
+                        <div class="form-group col">
+                        <label for="socailPlatformAddress">Instagram Handle</label>
+                        <input type="text" name="shopSocialPlatform" class="form-control" id="socailPlatformAddress"
+                            placeholder="chill.pernai">
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="wizard-step">
+                    <<div class="form-group mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Add your shop info</h3>
+                        <p class="text-center">Local address of your shop will be here.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="countryName">Country/region</label>
+                        <select class="form-control" name="action" required>
+                            <option selected disabled value="">Please choose one ...</option>
+                            <option value="0">Bangladesh</option>
+                            <option value="1">Pakisthan</option>
+                            <option value="2">Nepal</option>
+                            <option value="3">America</option>
+                            <option value="4">Canada</option>
+                            <option value="5">China</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="shopCity">City</label>
+                        <select class="form-control" name="action" required>
+                            <option selected disabled value="">Please choose one ...</option>
+                            <option value="0">Dhaka</option>
+                            <option value="1">Barishal</option>
+                            <option value="2">New York</option>
+                            <option value="3">Moscow</option>
+                            <option value="4">Dubai</option>
+                            <option value="5">Berlin</option>
+                        </select>
+                        </div>
+                        <div class="form-group col">
+                        <label for="shopPostalCode">Postal Code</label>
+                        <input type="tel" name="postalCode" class="form-control" id="shopPostalCode" required
+                            placeholder="1236">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="localAddressHouseNo">Apartment, suite, etc</label>
+                        <input type="text" name="shopSocialPlatform" class="form-control" id="localAddressHouseNo"
+                            required
+                            placeholder="chill.pernai">
+                        </div>
+                    <div class="form-group">
+                        <label for="localAddress">Detail Address</label>
+                        <textarea name="address" class="form-control" id="localAddress"></textarea>
+                    </div> 
+                    
+                    @*<div class="form-group w-50 mx-auto">
+                        <h1>Title 4</h1>
+                    </div>
+                    <div class="form-group">
+                        <label for="titleNoti">Action</label>
+                        <textarea class="form-control required fetch-info">🍍</textarea>
+                    </div>*@
+
+                </div>
+
+            </aside>
+        </form>
+    </main>
+
+
+
+@section Scripts{
+    <script src="~/AdminLTE/SetupWizard/src/wizard.js"></script>
+    <script src="~/AdminLTE/SetupWizard/main.js"></script>
+    
+    <!-- dropzonejs -->
+    <script src="~/AdminLTE/plugins/dropzone/min/dropzone.min.js"></script>
+
+      <script>
+    // DropzoneJS Demo Code Start
+    Dropzone.autoDiscover = false
+        
+   
+
+     //dropZone for icon starts
+    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+    var previewNode = document.querySelector("#template")
+    /previewNode.id = ""
+    var previewTemplate = previewNode.parentNode.innerHTML
+
+    previewNode.parentNode.removeChild(previewNode)
+
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+        url: "/target-url", // Set the url
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        maxFiles: 1,//max 1 file
+        parallelUploads: 21,
+        previewTemplate: previewTemplate,
+        autoQueue: false, // Make sure the files aren't queued until manually added
+        previewsContainer: "#previews", // Define the container to display the previews
+        clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+    })
+    myDropzone.on("addedfile", function(file) {
+        // Hookup the start button
+        file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
+ 
+    })
+
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function(progress) {
+        document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+    })
+
+
+    myDropzone.on("sending", function(file) {
+        // Show the total progress bar when upload starts
+        document.querySelector("#total-progress").style.opacity = "1"
+        // And disable the start button
+        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+    })
+
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function(progress) {
+        document.querySelector("#total-progress").style.opacity = "0"
+    })
+
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#actions .start").onclick = function() {
+        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        console.log("button1");
+    }
+  
+    document.querySelector("#actions .cancel").onclick = function() {
+        myDropzone.removeAllFiles(true)
+   
+    }
+    function showIconActionDiv(){
+        $("#actions").show();
+    }
+
+
+    //dropZone for icon ends
+
+
+  // DropzoneJS Demo Code End
+  </script>
+   
+
+}
+

@@ -1,0 +1,114 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html class="no-js" lang="" style="background: #5864ff;">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon"
+          type="image/x-icon"
+          href="~/LandingSite/assets/img/favicon.png" />
+    <!-- Place favicon.ico in the root directory -->
+    <!-- ======== CSS here ======== -->
+    <link rel="stylesheet" href="~/LandingSite/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/lineicons.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/animate.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/main.css" />
+</head>
+
+<body>
+    <!-- ======== preloader start ======== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="spinner">
+                <div class="spinner-container">
+                    <div class="spinner-rotator">
+                        <div class="spinner-left">
+                            <div class="spinner-circle"></div>
+                        </div>
+                        <div class="spinner-right">
+                            <div class="spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1></h1>
+
+    <section id="login_register_form">
+        <div class="form_box">
+            @*<div class="buttons d-flex">
+                <div id="active_button"></div>
+                <button type="button" class="toggle-btn"><strong onclick="login()">@ViewData["Title"]</strong></button>
+                <button type="button" class="toggle-btn"><strong onclick="register()">Register</strong></button>
+                </div>  *@
+            <form id="account" method="post" asp-action="Login" asp-controller="Account" asp-area="">
+                <h2 class="my-5 text-center">@ViewData["Title"] Here</h2>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating">
+                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" class="input_group" id="login" />
+                    <label asp-for="Email" class="form-label"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Password" class="form-label"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label asp-for="RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="StoreId" id="StoreId" name="StoreId" value="@Model.StoreId" aria-required="true">
+
+                <div class="col text-center my-3">
+                    <button id="login-submit" type="submit" class="main-btn btn-hover">Submit</button>
+                </div>
+                <div>
+                    @*<p>
+                        <a id="forgot-password" asp-area="" asp-action="ForgotPassword" asp-controller="Account">Forgot your password?</a>
+                        </p>*@
+                    <p class="mt-5 text-center">
+                        <a asp-area="" asp-action="Register" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
+                            <i class="lni lni-grid-alt pe-2"></i>
+                            Don't have an account? Register Now!
+                        </a>
+                    </p>
+
+                    <p class="mt-3 mb-5 text-center">
+                        <a asp-area="" asp-action="Index" asp-controller="Home" asp-route-returnUrl="@Model.ReturnUrl">
+                            <i class="lni lni-arrow-left pe-2"></i>
+                            Go Back
+                        </a>
+                    </p>
+                    @*<p>
+                        <a id="resend-confirmation" asp-area="" asp-controller="Account" asp-action="ResendEmailConfirmation">
+                        Resend email confirmation
+                        </a>
+                        </p>*@
+                </div>
+            </form>
+        </div>
+    </section>
+
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+    <!-- ======== JS here ======== -->
+    <script src="~/LandingSite/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/LandingSite/assets/js/wow.min.js"></script>
+    <script src="~/LandingSite/assets/js/main.js"></script>
+</body>
+</html>

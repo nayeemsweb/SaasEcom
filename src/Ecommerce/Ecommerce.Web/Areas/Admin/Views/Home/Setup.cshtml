@@ -1,0 +1,433 @@
+﻿@model ShopSetupModel
+@{
+    ViewData["Title"] = "Store Setup";
+}
+@section Styles{
+   <!-- Required meta tags -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/AdminLTE/SetupWizard/styles/css/main.css">
+
+    <link href="~/lib/font-awesome/css/all.css">
+
+    <!--Alertify.js-->
+<!-- include the style -->
+<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+<!-- include a theme -->
+<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+ <!--Pricing cards-->
+<link rel="stylesheet" href="~/css/PricingStyleSheet.css" type="text/css" />
+
+}
+    <main class="container mt-5 pt-5">
+
+        <form class="wizard" role="form" asp-area="Admin" asp-controller="Home" asp-action="Setup" method="post" asp-antiforgery="true">
+            <aside class="wizard-content container">
+
+                <div class="wizard-step">
+                    
+                    <div class="mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Set basic info to start</h3>
+                        <p class="text-center">This will be viewed to customer.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    <div class="form-group">
+                        @*<label for="aboutOperatingIndustryInfo">Which industry will you be operating in?</label>
+                        <select class="form-control" id="aboutOperatingIndustryInfo" asp-for="StoreType" asp-items="Model.StoreTypes">
+                            <option selected disabled  value="">Please choose one ...</option>
+                        </select>*@
+                        <label for="industry">Operating Industry</label>
+                        <input type="text" class="form-control banner-info" id="industry"
+                            asp-for="OperatingIndustry"
+                            placeholder="Cafe">
+                    </div>
+                     <div class="row">
+                         <div class="form-group col">
+                            <label for="StoreNameID">Store Name</label>
+                            <input type="text" class="form-control banner-info" id="StoreNameID"
+                                asp-for="StoreName" required
+                                placeholder="Sultan dine">
+                            <span asp-validation-for="StoreName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col">
+                               
+                            <label for="StoreHandle">Store Handle</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control banner-info" id="StoreHandle"
+                                asp-for="Handle" required
+                                placeholder="Handle will also use as sub domain"
+                                onkeyup="createHandleAjax()"
+                                >
+                                <div class="input-group-addon">
+                                    <i class="fa fa-check text-green ml-2 mt-2" style="display:none" id="checkMark"></i> 
+                                </div>
+                            </div>
+                            <span class="text-danger" style="display:none" id="handleExistsWarn">Same Handle exists.</span>
+                            <span asp-validation-for="Handle" class="text-danger" id="handleModelSpan"></span>
+                        </div>
+
+                     </div>
+                    <div class="form-group">
+                        <label for="StoreTitle">Store Title</label>
+                        <input type="text" class="form-control banner-info" id="StoreTitle"
+                            asp-for="StoreTitle"
+                            placeholder="Good Food, Good Life.">
+                    </div>
+
+                    <!--Image upload section-->
+                        <div class="card-body row justify-content-center">
+                            <div class="col-xs-6 m-5">
+                            <div id="storeIconImage" class="fallback dropzone">
+                                <input name="file" type="file" class="d-none" />
+                            </div>
+                            @Html.HiddenFor(IconUrl=>IconUrl.StoreLogoUrl)
+                            </div>
+                            <div class="col-xs-6 m-5">
+                            <div id="storeCoverImage" class="fallback dropzone">
+                                <input name="file" type="file" class="d-none" />
+                            </div>
+                            @Html.HiddenFor(CoverUrl=>CoverUrl.StoreBannerUrl)
+                            </div>
+                        </div>
+                    <!--//Image upload section-->            
+                    <div class="form-group">
+                        <label for="descShop">Describe about your shop</label>
+                        <textarea class="form-control" id="descShop" asp-for="StoreDescription"></textarea>
+                    </div> 
+                </div>
+
+        <!-- /.row -->
+
+        
+               <div class="wizard-step">
+                    <div class="form-group mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Add your shop info</h3>
+                        <p class="text-center">Virtual address of your shop will be here.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shopUrl">Shop URL</label>
+                        <input type="text" class="form-control" id="shopUrl"
+                            asp-for="StoreUrl"
+                            placeholder="www.peranaichill.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="EmailAddress">Shop Email Address</label>
+                        <input type="email" class="form-control" id="EmailAddress"
+                            asp-for="StoreEmailAddress"
+                            placeholder="mail@pernaichill.com" required>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="PhoneNumber">Phone Number</label>
+                        <input type="tel" class="form-control" id="PhoneNumber"
+                            asp-for="PrimaryPhoneNumber"
+                            placeholder="01711111112" required>
+                        </div>
+                        <div class="form-group col">
+                        <label for="PhoneNumber">Phone Number</label>
+                        <input type="tel" class="form-control" id="PhoneNumber"
+                            asp-for="OptionalPhoneNumber"
+                            placeholder="01711111113 (optional)">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="socailPlatformAddress">Facebook Page Handle</label>
+                        <input type="text" class="form-control" id="socailPlatformAddress"
+                            asp-for="FacebookPageHandle"
+                            placeholder="chill.pernai">
+                        </div>
+                        <div class="form-group col">
+                        <label for="socailPlatformAddress">Instagram Handle</label>
+                        <input type="text" class="form-control" id="socailPlatformAddress"
+                            asp-for="InstagramAccountHandle"
+                            placeholder="chill.pernai">
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="wizard-step">
+                    <div class="mb-5 w-50 mx-auto">
+                        <h3 class="text-center">Add your shop info</h3>
+                        <p class="text-center">Local address of your shop will be here.
+                            <br />
+                         You can always change this later.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="countryName">Country/region</label>
+                        <input type="text" class="form-control" id="countryName"
+                            asp-for="Country"
+                            placeholder="Bangladesh">
+                        @*<select class="form-control" asp-for="ShopCountry" asp-items="Model.ShopCountries" id="countryName">
+                            <option selected disabled value="">Please choose one ...</option>
+                        </select>*@
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                        <label for="cityName">City</label>
+                        <input type="text" class="form-control" id="cityName"
+                            asp-for="City"
+                            placeholder="Dhaka">
+                        @*<select class="form-control" asp-for="ShopCity" asp-items="Model.ShopCities" id="cityName">
+                            <option selected disabled value="">Please choose one ...</option>
+                        </select>*@
+                        </div>
+                        <div class="form-group col">
+                        <label for="shopPostalCode">Postal Code</label>
+                        <input type="tel" class="form-control" id="shopPostalCode" required
+                        asp-for="PostalCode"
+                            placeholder="1236">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="localAddressHouseNo">Apartment, suite, etc</label>
+                        <input type="text" class="form-control" id="localAddressHouseNo"
+                            required asp-for="ApartmentAddress"
+                            placeholder="chill.pernai">
+                        </div>
+                    <div class="form-group">
+                        <label for="localAddress">Detail Address</label>
+                        <textarea class="form-control" id="localAddress"
+                        asp-for="DetailAddress"></textarea>
+                    </div> 
+                   @* <div class="text-right mb-n3">
+                      <button type="submit" id="SubmitButton" class="btn btn-outline-info rounded-pill">Submit</button>
+                    </div>*@
+                </div>
+   <div class="wizard-step">
+
+
+        <div class="container">
+            <div class="row justify-content-md-center">
+            @foreach(var plan in Model.SubscriptionPlans.OrderBy(x=>x.PlanPrice).ToList())
+            {
+                <div class="col-md-3 col-sm-6 m-4 text-center">
+                <div class="pricingTable" style="--inputColor:@plan.PlanColor" id="@plan.Id">
+                    <div class="pricingTable-header">
+                        <div class="price-value"> @plan.PlanPrice ৳ <span class="month">per month</span> </div>
+                    </div>
+                <h3 class="heading">@plan.PlanName</h3>
+                <div class="pricing-content">
+                    
+                       <ul>
+                        <li>Max <b>@plan.ProductUploadLimit</b> product upload</li>
+                                                @if (plan.StorageLimit >= 1024)
+                                                {
+                                                <li><b>Max @{var gb = (float)System.Math.Round((plan.StorageLimit / 1024), 2);}
+                                                <span>@gb</span>
+                                                 GB</b> Disk Space</li>}
+                                                else
+                                                {
+                                                    <li><b>Max @plan.StorageLimit MB</b> Disk Space</li>
+                                                }
+                                                               
+                    </ul>
+                                                               
+                    
+                </div>
+                <div class="pricingTable-signup">
+                  <a onclick="PlanChoosing('@plan.Id')">Select</a>
+                </div>
+                </div>
+                </div>
+            }
+            @Html.HiddenFor(SubscriptionForeignKey=>SubscriptionForeignKey.SubscriptionPlanId)
+            </div>
+        </div>
+        
+        <div class="text-right mb-n3" onmouseout="enableButton()">
+            <button type="submit" id="SubmitButton" onmouseover="SubmitCheck()" class="btn btn-outline-info rounded-pill">Submit</button>
+        </div>
+    </div>
+                
+
+            </aside>
+        </form>
+    </main>
+
+
+
+@section Scripts{
+    <!-- include the script -->
+    <script src="~/alertifyjs/alertify.min.js"></script>
+
+    <!--JQuery validation script-->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/AdminLTE/SetupWizard/src/wizard.js"></script>
+    <script src="~/AdminLTE/SetupWizard/main.js"></script>
+    <script>
+    function getPlanId(Id){
+        console.log("clicked");
+        console.log(id);
+    }
+    </script>
+    <script>
+        var handleCheck=false;
+
+        function SubmitCheck(){
+            var value=$("#SubscriptionPlanId").val();
+            if(value.length==0){ 
+                alertify.error('Choose a subscription plan.')
+                $("#SubmitButton").attr('type', 'button')
+            }
+            if(!handleCheck){
+                alertify.error('Enter a valid handle.')
+                $("#SubmitButton").attr('type', 'button')
+            }
+            if(handleCheck==true && value.length>0){
+                $("#SubmitButton").attr('type', 'submit')
+            }
+            
+        }
+        function enableButton(){
+             $("#SubmitButton").attr('type', 'submit')
+        }
+        var zoomArray=[];
+        function PlanChoosing(Id){
+            zoomArray.push(Id);
+            zoom();
+            $("#SubscriptionPlanId").val(Id);
+            $("#SubmitButton").attr('type', 'submit')
+        }
+        function zoom(){
+            if(zoomArray.length>1)
+                {
+                    $("#"+zoomArray[0]).animate({ 'zoom': 1 }, 300);
+                    zoomArray.shift();
+                }
+                $("#"+zoomArray[0]).animate({ 'zoom': 1.05 }, 300);
+        }
+
+        function createHandleAjax(){
+           $("#checkMark").hide();
+           var inputValue = $("#StoreHandle").val();
+           if(inputValue.length<5||inputValue.length>8){
+               $("#handleModelSpan").show();
+               $("#checkMark").hide();
+               handleCheck=false;
+           }
+           else{
+               $("#handleModelSpan").hide();
+           }
+           if(inputValue.length>=5 && inputValue.length<9)//make ajax call 
+            {
+                 $.ajax({
+                   url: '@Url.Action("StoreHandleChecker", "Home", "Admin")',
+                   type: 'POST',
+                   dataType: 'json',
+                   cache: false,
+                   data: { 'handle': inputValue },
+                   success: function (results) {
+                       var BoolResult=results['message'];
+                       if(BoolResult==false){
+                           $("#handleExistsWarn").show();
+                           $("#checkMark").hide();
+                           handleCheck=false;
+                       }else{
+                           $("#handleExistsWarn").hide();
+                           $("#checkMark").show();
+                           handleCheck=true;
+                       }
+                   },
+                   error: function () {
+                    //alertify.defaults.glossary.title = 'Problem.!';
+                    //alertify.error('Error occured to perform this action.')
+                   }
+                   });
+            }
+        }
+    </script>
+    
+
+    <!-- dropzonejs -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+
+
+      <script>
+         
+             Dropzone.autoDiscover = false;
+               var myDropzoneIcon = new Dropzone("div#storeIconImage", {
+                   dictDefaultMessage: "Drop store Icon here to upload",
+                   url: "/Admin/Image/ImageUploader",
+                   maxFiles: 1,
+                   addRemoveLinks: true,
+                   init: function() {
+                        //will be impliment later
+                        this.on('maxfilesreached', function(){
+                            this.removeEventListeners();
+                        });
+                        
+                   },
+                   success(file, message) {
+                       if(message.code == 200)
+                       {
+                           file.uploadedUrl = message.path;
+                           $("#StoreLogoUrl").val(message.path);
+                       }
+                    },
+            
+                    removedfile: function(file) {
+                         $.ajax({
+                         type: 'POST',
+                         url: '/Admin/Image/DeleteImage',
+                         data: {url: file.uploadedUrl},
+                         sucess: function(data){
+                           console.log('success: ' + data); }
+                    });
+
+                     var _ref;
+              
+                     return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+               }
+            });
+            
+             var myDropzoneCover = new Dropzone("div#storeCoverImage", {
+                   dictDefaultMessage: "Drop store Cover here to upload",
+                   url: "/Admin/Image/ImageUploader",
+                   maxFiles: 1,
+                   addRemoveLinks: true,
+                   init: function() {
+                        //will be impliment later
+                        this.on('maxfilesreached', function(){
+                            this.removeEventListeners();
+                        });
+                   },
+                   success(file, message) {
+                       if(message.code == 200)
+                       {
+                           file.uploadedUrl = message.path;
+                           $("#StoreBannerUrl").val(message.path);
+                       }
+                    },
+            
+                    removedfile: function(file) {
+                         $.ajax({
+                         type: 'POST',
+                         url: '/Admin/Image/DeleteImage',
+                         data: {url: file.uploadedUrl},
+                         sucess: function(data){
+                           console.log('success: ' + data); }
+                    });
+
+                     var _ref;
+              
+                     return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+               }
+            });
+      </script>
+   
+
+}
+

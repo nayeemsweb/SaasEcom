@@ -1,0 +1,532 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>@ViewData["Title"] - Ecommerce.Web</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon"
+          type="image/x-icon"
+          href="~/LandingSite/assets/img/favicon.png" />
+    <!-- Place favicon.ico in the root directory -->
+    <!-- ======== CSS here ======== -->
+    <link rel="stylesheet" href="~/LandingSite/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/lineicons.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/animate.css" />
+    <link rel="stylesheet" href="~/LandingSite/assets/css/main.css" />
+</head>
+<body>
+
+    <!-- ======== preloader start ======== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="spinner">
+                <div class="spinner-container">
+                    <div class="spinner-rotator">
+                        <div class="spinner-left">
+                            <div class="spinner-circle"></div>
+                        </div>
+                        <div class="spinner-right">
+                            <div class="spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- preloader end -->
+    <!-- ======== header start ======== -->
+    <header class="header">
+        <div class="navbar-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                                <img src="~/LandingSite/assets/img/logo/logo.svg" alt="Logo" />
+                            </a>
+                            <button class="navbar-toggler"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#navbarSupportedContent"
+                                    aria-controls="navbarSupportedContent"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse sub-menu-bar"
+                                 id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a class="page-scroll active" href="#home">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#features">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#about">About</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#why">Why</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#contact">Contact</a>
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            </div>
+                            <!-- navbar collapse -->
+                        </nav>
+                        <!-- navbar -->
+                    </div>
+                </div>
+                <!-- row -->
+            </div>
+            <!-- container -->
+        </div>
+        <!-- navbar area -->
+    </header>
+    <!-- ======== header end ======== -->
+    <!-- ======== hero-section start ======== -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center position-relative">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="wow fadeInUp" data-wow-delay=".4s">
+                            Welcome To<br/>
+                            Ecom.io 
+                        </h1>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">
+                            Committed to People, Committed to the future. 
+                            Saas Solutions for your Business Grow on time.
+                        </p>
+                        <a asp-area="" asp-controller="Account" asp-action="Register"
+                           class="main-btn border-btn btn-hover wow fadeInUp"
+                           data-wow-delay=".6s">Explore Now</a>
+                        <a href="#features" class="scroll-bottom">
+                            <i class="lni lni-arrow-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-img wow fadeInUp" data-wow-delay=".5s">
+                        <img src="~/LandingSite/assets/img/hero/hero-img.png" alt="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======== hero-section end ======== -->
+    <!-- ======== feature-section start ======== -->
+    <section id="features" class="feature-section pt-120">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-8 col-sm-10">
+                    <div class="single-feature">
+                        <div class="icon">
+                            <i class="lni lni-cogs"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Fast Setup</h3>
+                            <p>
+                                Ecom.io is easy to customize as per the need and developer friendly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-8 col-sm-10">
+                    <div class="single-feature">
+                        <div class="icon">
+                            <i class="lni lni-layout"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Clean Design</h3>
+                            <p>
+                                Want a responsive theme for your Ecommerce application? 
+                                Looking for a customized Ecommerce website template?
+                                We have a standard format too.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-8 col-sm-10">
+                    <div class="single-feature">
+                        <div class="icon">
+                            <i class="lni lni-coffee-cup"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Easy to Use</h3>
+                            <p>
+                                We believe brand interaction is key to communication. 
+                                Real innovations and positive customer experience are the heart of success.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======== feature-section end ======== -->
+    <!-- ======== about-section start ======== -->
+    <section id="about" class="about-section pt-150">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-img">
+                        <img src="~/LandingSite/assets/img/about/about-1.png" alt="" class="w-100" />
+                        <img src="~/LandingSite/assets/img/about/about-left-shape.svg"
+                             alt=""
+                             class="shape shape-1" />
+                        <img src="~/LandingSite/assets/img/about/left-dots.svg"
+                             alt=""
+                             class="shape shape-2" />
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-content">
+                        <div class="section-title mb-30">
+                            <h2 class="mb-25 wow fadeInUp" data-wow-delay=".2s">
+                                Perfect Solution Thriving Online Business
+                            </h2>
+                            <p class="wow fadeInUp" data-wow-delay=".4s">
+                                We provide SaaS and Software on demand is a form of cloud service.
+                                With a cloud-based solution, you do not need to be at a computer 
+                                that has specific software installed. As long as you have access to 
+                                the internet, you can use the SaaS service anywhere and anytime. It 
+                                does not get easier than this!
+                            </p>
+                        </div>
+                        <a href="javascript:void(0)"
+                           class="main-btn btn-hover border-btn wow fadeInUp"
+                           data-wow-delay=".6s">Discover More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======== about-section end ======== -->
+    <!-- ======== about2-section start ======== -->
+    <section id="about" class="about-section pt-150">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-content">
+                        <div class="section-title mb-30">
+                            <h2 class="mb-25 wow fadeInUp" data-wow-delay=".2s">
+                                Easy to Use with Tons of Awesome Features
+                            </h2>
+                            <p class="wow fadeInUp" data-wow-delay=".4s">
+                                We provide beneficial cost savings since it usually 
+                                resides in a shared or multi-tenant environment, 
+                                where the hardware and software license costs are 
+                                low compared with the traditional model.
+
+Another advantage is that you can rapidly scale your customer base since SaaS allows small and medium businesses to use a software that otherwise they would not use due to the high cost of licensing.
+                            </p>
+                        </div>
+                        <ul>
+                            <li>Quick Access</li>
+                            <li>Easily to Manage</li>
+                            <li>24/7 Support</li>
+                        </ul>
+                        <a href="javascript:void(0)"
+                           class="main-btn btn-hover border-btn wow fadeInUp"
+                           data-wow-delay=".6s">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 order-first order-lg-last">
+                    <div class="about-img-2">
+                        <img src="~/LandingSite/assets/img/about/about-2.png" alt="" class="w-100" />
+                        <img src="~/LandingSite/assets/img/about/about-right-shape.svg"
+                             alt=""
+                             class="shape shape-1" />
+                        <img src="~/LandingSite/assets/img/about/right-dots.svg"
+                             alt=""
+                             class="shape shape-2" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======== about2-section end ======== -->
+    <!-- ======== feature-section start ======== -->
+    <section id="why" class="feature-extended-section pt-100">
+        <div class="feature-extended-wrapper">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-5 col-xl-6 col-lg-8 col-md-9">
+                        <div class="section-title text-center mb-60">
+                            <h2 class="mb-25 wow fadeInUp" data-wow-delay=".2s">
+                                Why Choose Ecom.io
+                            </h2>
+                            <p class="wow fadeInUp" data-wow-delay=".4s">
+                                This is a cloud computing offering that 
+                                provides users with access to a vendor’s cloud-based software.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-display"></i>
+                            </div>
+                            <div class="content">
+                                <h3>SaaS Focused</h3>
+                                <p>
+                                    The applications reside on a remote cloud network accessed 
+                                    through the web and it works like a rental. 
+                                    You and your organization have the authorization to use 
+                                    it for a period of time and pay for the software that you are using.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-leaf"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Awesome Design</h3>
+                                <p>
+                                    An appealing and attractive design helps to win and hold the user's attention.
+                                    We provide you a Awesome looking minimalistic web template with a 
+                                    view to generating more customers.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-grid-alt"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Ready to Use</h3>
+                                <p>
+                                    Ecom.io is an easy to use tool for eCommerce. 
+                                    With the help system you can present your products. 
+                                    It is all very easy!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-money-protection"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Low Cost</h3>
+                                <p>
+                                    We offer you the best Saas solution with a reasonable price.
+                                    Our Premium packages are all simple with flat rates. 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-layers"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Essential Sections</h3>
+                                <p>
+                                    Ecom.io template is crafted with love and can be used for 
+                                    any type of ecommerce business. 
+                                    This template comes with 8 inner pages included 1 home page.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-feature-extended">
+                            <div class="icon">
+                                <i class="lni lni-rocket"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Highly Optimized</h3>
+                                <p>
+                                    Search Engine Optimization (SEO) is one of the things 
+                                    to master when running a website. 
+                                    And we provide the best SEO friendly platform for you!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======== feature-section end ======== -->
+    <!-- ======== subscribe-section start ======== -->
+    <section id="contact" class="subscribe-section pt-120">
+        <div class="container">
+            <div class="subscribe-wrapper img-bg">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-7">
+                        <div class="section-title mb-15">
+                            <h2 class="text-white mb-25">Subscribe Our Newsletter</h2>
+                            <p class="text-white pr-5">
+                                Get our latest News and Updates
+                                at your finger tips!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-5">
+                        <form action="#" class="subscribe-form">
+                            <input type="email"
+                                   name="subs-email"
+                                   id="subs-email"
+                                   placeholder="Your Email" />
+                            <button type="submit" class="main-btn btn-hover">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Newsletter section Ends-->
+
+            <div class="message-box-header pt-100 mb-3 d-flex align-items-center">
+                <div class="icon">
+                    <i class="lni lni-envelope contact-icon"></i>
+                </div>
+                <h2 class="contact-title">Have Any Query?</h2>
+            </div>
+            <div class="message-box-body">
+                <form role="form" asp-area="" asp-controller="" asp-action="" method="post" asp-antiforgery="true">
+                    <div class="form-group d-flex">
+                        <div class="mb-3 col-md-6 pe-3">
+                            <label for="name" class="form-label"><strong>Enter Your Name</strong></label>
+                            <input type="text" class="form-control" id="name" placeholder="Full Name">
+                        </div>
+
+                        <div class="mb-3 col-md-6 ps-3">
+                            <label for="email" class="form-label"><strong>Enter Your E-mail</strong></label>
+                            <input type="email" class="form-control" id="email" placeholder="E-mail">
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-12 mt-3">
+                        <label for="name" class="form-label"><strong>Subject</strong></label>
+                        <input type="text" class="form-control" id="name" placeholder="Subject of your message">
+                    </div>
+                    <div class="mb-3 mt-45">
+                        <label for="msg-textarea" class="form-label"><strong>Your Message</strong></label>
+                        <textarea class="form-control" id="msg-textarea" rows="3" placeholder="Write your message here . . ."></textarea>
+                    </div>
+                    <button type="submit" class="main-btn btn-hover border-btn">Submit</button>
+                </form>
+            </div>
+            <!-- Message Box section Ends-->
+        </div>
+    </section>
+    <!-- ======== subscribe-section end ======== -->
+    <!-- ======== footer start ======== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="widget-wrapper">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="footer-widget">
+                            <div class="logo mb-30">
+                                <a href="index.html">
+                                    <img src="~/LandingSite/assets/img/logo/logo.svg" alt="" />
+                                </a>
+                            </div>
+                            <p class="desc mb-30 text-white">
+                                Ecom.io is premium Saas service for your Ecommerce Startup. 
+                                It is retina ready, fully responsive and compatible with all kind of devices.
+                            </p>
+                            <ul class="socials">
+                                <li>
+                                    <a href="jvascript:void(0)">
+                                        <i class="lni lni-facebook-filled"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="jvascript:void(0)">
+                                        <i class="lni lni-twitter-filled"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="jvascript:void(0)">
+                                        <i class="lni lni-instagram-filled"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="jvascript:void(0)">
+                                        <i class="lni lni-linkedin-original"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+                        <div class="footer-widget">
+                            <h3>About Us</h3>
+                            <ul class="links">
+                                <li><a href="javascript:void(0)">Home</a></li>
+                                <li><a href="javascript:void(0)">Feature</a></li>
+                                <li><a href="javascript:void(0)">About</a></li>
+                                <li><a href="javascript:void(0)">Testimonials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h3>Features</h3>
+                            <ul class="links">
+                                <li><a href="javascript:void(0)">How it works</a></li>
+                                <li><a href="javascript:void(0)">Privacy policy</a></li>
+                                <li><a href="javascript:void(0)">Terms of service</a></li>
+                                <li><a href="javascript:void(0)">Refund policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h3>Other Products</h3>
+                            <ul class="links">
+                                <li><a href="jvascript:void(0)">Accounting Software</a></li>
+                                <li><a href="jvascript:void(0)">Billing Software</a></li>
+                                <li><a href="jvascript:void(0)">Booking System</a></li>
+                                <li><a href="jvascript:void(0)">Tracking System</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ======== footer end ======== -->
+    <!-- ======== scroll-top ======== -->
+    <a href="#" class="scroll-top btn-hover">
+        <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <!-- ======== JS here ======== -->
+    <script src="~/LandingSite/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/LandingSite/assets/js/wow.min.js"></script>
+    <script src="~/LandingSite/assets/js/main.js"></script>
+</body>
+</html>
+

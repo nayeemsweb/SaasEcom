@@ -1,0 +1,106 @@
+﻿@model ProductSubscriptionEditModel
+@{
+    ViewData["Title"] = "Contact Form";
+    ViewData["PageNav"] = "Contact Form";
+
+}
+
+@section Styles
+{
+
+}
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Out of Stock Notifications</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Subscription Details Page</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <div>
+        <!-- Contact Form Begin -->
+        <div class="contact-form spad">
+
+            <div class="card ml-3 mr-3 p-1">
+
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="float-left">
+                                <h1 class="card-title">Subscription Details</h1>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right">
+                                <a asp-action="Index" asp-controller="ProductSubscriptionNotification" class="btn btn-outline-info btn-sm mr-2">&nbsp; List of Subscriptions &nbsp;<i class="fas fa-users ml-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <p><b>Email:</b> @Model?.Email</p>
+                                <p><b>Mobile:</b> @Model?.PhoneNo</p>
+                                <p><b>Product Name:</b> @Model.Product.Name</p>
+                                <p><b>Date and Time:</b> @Model.Time</p>
+
+
+                            </div>
+                            <div class="col-sm-7">
+                                <img src="/@Model.ProductImageUrl" height="auto" width="100%" class="img-thumbnail" />
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <!-- Contact Form End -->
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts
+{
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+}
+
+
+
+
+
+
+
+

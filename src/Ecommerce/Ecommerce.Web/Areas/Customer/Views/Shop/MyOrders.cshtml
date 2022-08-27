@@ -1,0 +1,527 @@
+﻿@{
+    ViewData["Title"] = "My Orders";
+
+}
+
+@section Styles
+{
+<!-- DataTables -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" href="~/AdminLTE/plugins/datatables/components.css">
+
+
+<!--Toggle switch-->
+<link href="~/CustomSwitch/css/component-custom-switch.css" rel="stylesheet">
+
+<!-- toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<style>
+
+#stickyCart{
+    display:none;
+ }
+</style>
+
+
+}
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper ">
+    <!--Content Header (Page header) -->
+    <div class="content-header">
+        <section class="breadcrumb-section set-bg" data-setbg="/EcommerceTheme/img/breadcrumb.jpg" style="background-image: url(&quot;/EcommerceTheme/img/breadcrumb.jpg&quot;);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <div class="breadcrumb__text">
+                            <h2>My Orders</h2>
+                            <div class="breadcrumb__option">
+                                <a href="/customer/shop">Home</a>
+                                <span>My Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container-fluid">
+            @*<partial name="_ResponsePartial"*@ 
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h4 class="mt-3">My Orders</h4>
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-md-2 lg-2 pr-0 mt-2">
+                    <ul class="list-group">
+                        <li class="list-group-item">My Account</li>
+                        <li class="list-group-item">My Orders</li>
+                        <li class="list-group-item">Address Book</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-10 lg-10 ">
+
+                    <div class="card-body p-0" id="dataTableBody">
+
+                                <table id="myOrders" class="table table-bordered table-hover dataTable dtr-inline" >
+                                    <thead>
+                                        <tr>
+                                            <td>Order#</td>
+                                            <td>Order Date</td>
+                                            <td>Order Total</td>
+                                            <td>Status</td>
+                                            <td class="text-center">Actions</td>
+                                        </tr>
+                                    </thead>
+                                    <!--From DB-->
+                                    <tfoot>
+                                        <tr>
+                                            <td>Order#</td>
+                                            <td>Order Date </td>
+                                            <td>Order Total</td>
+                                            <td>Status</td>
+                                            <td class="text-center">Actions</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                    </div>
+                </div>
+            </div>
+            <partial name="ModalPartialInvoice" />
+            <partial name="ModalTrackOrder" />
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+<!--sweetAlert-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+<!--Toggle Switch-->
+<script src="~/CustomSwitch/js/bootstrap4-toggle.min.js"></script>
+
+<!--Toaster-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+
+<!-- DataTables -->
+<script src="~/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/AdminLTE/plugins/select2/js/select2.min.js"></script>
+
+
+<script>
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    $(function () {
+        $('#myOrders').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "/Customer/Shop/GetMyOrders",
+                "dataType": 'json',
+                "data": {id: "C1457E73-ABC4-42A4-AF2F-CE7CA1C65FF1"}
+            },
+
+            "columnDefs": [
+                {
+                    "orderable": true,
+                    "targets": 3,
+                    "render": function (data, type, row) {
+                        return GetStatus(data);
+                     }
+                },
+                {
+                    "orderable": false,
+                    "targets": 4,
+                    "render":function (data, type, row) {
+                        return actionDropDown(data, type, row);
+                    }
+                },
+
+            ]
+        })
+    })
+</script>
+
+
+<script>
+
+    //actions DropDown Functions
+
+    function actionDropDown(data, type, row){
+        console.log(data);
+        var order = row[0];
+
+        return          `<div class="text-center">
+                                <button type="submit" class="btn btn-info btn-sm ml-3 " 
+                                id = "status" onclick="updateStatus('${order}', '${row}')" value='${data}'>
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Cancel Order
+                                    </button>
+                                    <button type="submit" class="btn btn-dark btn-sm ml-2 show-bs-modal "
+                                      onclick="displayInvoice('${order}')"
+                                      id = "invoice" data-id='${data}' value='${data}'>
+                                        <i class="fas fa-file-invoice">
+                                        </i>
+                                        Order Details
+                                    </button>
+                                    <button type="submit" class="btn btn-secondary btn-sm ml-2 show-bs-modal "
+                                      onclick="displayTrackOrder('${order}')"
+                                      id = "trackOrder" data-id='${data}' value='${data}'>
+                                        <i class="fas fa-shipping-fast">
+                                        </i>
+                                        Track Order 
+                                    </button>
+
+                           </div>`;
+        }
+</script>
+
+<script>
+    //get status in colored text
+    function GetStatus(data){
+            if(data=='Archived')
+                return `<span style="color:#A9A9A9">${data}</span>`;
+            else if(data=="Delivered")
+                return `<span style="color:#4CAF50">${data}</span>`;
+            else if(data=="Processing")
+                return `<span style="color:#00BCD4">${data}</span>`;
+            else if(data=="Canceled")
+                return `<span style="color:#F44336">${data}</span>`;
+            else 
+                return `<span style="color:#CDDC39"> ${data} </span>`;
+
+    }
+
+</script>
+
+
+<script>
+    //update status
+
+        function updateStatus(orderNumber,stat){
+            console.log('there');
+            console.log(orderNumber,stat);
+            var table = $('#myOrders').DataTable();
+
+            var orderNumber = parseInt(orderNumber);
+              var data,row,rowData;
+              $('#myOrders tbody').on('click', 'td', function () {
+                     data = table.row(this);
+                     row = $(this).closest('tr').index();
+                     rowData = table.row(this).data();
+                     console.log(rowData[3]);
+                     if(rowData[3]!="Processing"){
+                        if(rowData[3]=="Canceled"){
+                            showToasterMessage("The order is already Canceled","error");
+                        }
+                        else{
+                            showToasterMessage("The order can not be Canceled","error");
+                        }
+                    }
+                    else{
+                          $.ajax(
+                        {
+                            type: "POST",
+                            dataType:"json",
+                            contentType: "application/json; charset=utf-8",
+                            url: `/admin/order/edit?orderNumber=${orderNumber}&status=${"Canceled"}`,
+                            success: function (response) {
+                                console.log(response);
+                                if(response.status==200){
+                                    data.cell(row,3).data("Canceled");
+                                    showToasterMessage("The order is now canceled", "success");
+                                }
+
+                            },
+                            error: function (request, status, error) {
+                                console.log(status);
+                                showToasterMessage("Status of the order could not be changed", "error");
+                            }
+                        }
+                       )
+                    }
+
+             $('#myOrders tbody').off('click');
+              });
+
+
+        }
+
+
+        function showToasterMessage(message, type) {
+            if (type == "success")
+                toastr["success"](message);
+            else
+                toastr["error"](message);
+         }
+
+</script>
+
+
+<script>
+    function displayInvoice(orderNumber){
+
+             var orderNumber = parseInt(orderNumber);
+
+               $.ajax({
+       url: '@Url.Action("ModalPartialInvoice", "Shop", "Customer")',
+       type: 'POST',
+       cache: false,
+       data: { 'orderNumber': orderNumber },
+       success: function (results) {
+           console.log(results);
+           $('#modal-invoice').modal({
+                 show: true
+           });
+           $('#due').html(`<p class="lead" id="due">Amount due for ${results.description}</p>`);
+           $('#dateID').html(`<div class="col-12">
+                                <h4><i class="fas fa-globe" id="dateID"></i> AdminLTE, Inc.
+                                <small class="float-right">Date: ${new Date().toLocaleDateString()} </small>
+                                </h4></div>`);
+           $('#orders').html(`<b id="invoice_Number">Order ID: ${results.orderedProducts[0].id}</b>
+                              <br/>
+                             <b>Payment Due:</b> ${new Date().toLocaleDateString()}<br>
+                             <b>User Id :</b> ${results.orderedProducts[0].userId} `);
+           var priceTable = ` <tr> 
+                            <th style="width:50%" >Subtotal:</th>
+                            <td id='subTotal'>৳ ${results.orderedProducts[0].totalPrice} </td>
+                            </tr>
+                        <tr>
+                            <th>Tax (15%)</th>
+                            <td>৳ ${(15 * results.orderedProducts[0].totalPrice)/100}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping:</th>
+                            <td>৳ 50</td>
+                        </tr>
+                        <tr>
+                            <th>Total:</th>
+                            <td>৳ ${results.orderedProducts[0].totalPrice + 
+                                    (15 * results.orderedProducts[0].totalPrice)/100 + 50}</td>
+                        </tr>`
+
+           $('#priceIssues').html(priceTable);
+
+           const productInfo = document.querySelector('#tblBody');
+           productInfo.innerHTML = '';
+           $.each(results.orderedProducts, function(index, item) {
+           var image = item.productImage;
+           var tableHTML = `<tr>
+                        <td>${item.orderNumber}</td>
+                        <td>${item.productName}</td>
+                        <td><img src="https://localhost:7190/admin/image?url=${image}&w=75&h=75" class="rounded"/></td>
+                        <td>${item.quantity}</td>
+                        <td>${item.description}</td>
+                        <td>${item.price}</td>
+                        </tr>`
+                        productInfo.innerHTML+=tableHTML;
+
+            });
+
+
+          },
+
+
+       error: function (error) {
+          // console.log(error);
+       }
+    });
+
+    }
+
+</script>
+
+
+<script>
+
+    function displayTrackOrder(orderNumber){
+        
+             var orderNumber = parseInt(orderNumber);
+
+               $.ajax({
+       url: '@Url.Action("ModalTrackOrder", "Shop", "Customer")',
+       type: 'POST',
+       cache: false,
+       data: { 'orderNumber': orderNumber },
+       success: function (results) {
+           console.log(results);
+           $('#modal-track').modal({
+                 show: true
+           });
+           const statusInfo = document.querySelector('#trackStatus');
+           $('#orderNumber').html(` <h5 class="mb-5" id="orderNumber">Order Number - ${orderNumber} </h5>`);
+           console.log(results.orderedProducts[0].status);
+           
+           switch(parseInt(results.orderedProducts[0].status)) {
+              case 0:
+                statusInfo.innerHTML=`<div class="text-center">
+                    <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Shipped</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Canceled</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Archived</p>
+                  </div>`
+                break;
+              case 1:
+                statusInfo.innerHTML=`<div class="text-center">
+                     <i class="fas fa-circle"></i>
+                    <p>Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Shipped</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Canceled</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Archived</p>
+                  </div>`
+                break;
+              case 2:
+                statusInfo.innerHTML=`<div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Shipped</p>
+                  </div>
+                  <div class="text-center">
+                     <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Canceled</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p >Archived</p>
+                  </div>`
+                break;
+              case 3:
+                statusInfo.innerHTML=`<div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Shipped</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Canceled</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Archived</p>
+                  </div>`
+                break;
+              default:
+                statusInfo.innerHTML=`<div class="text-center">
+                    <i class="fas fa-circle" ></i>
+                    <p>Processing</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Shipped</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Delivered</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-circle"></i>
+                    <p>Canceled</p>
+                  </div>
+                  <div class="text-center">
+                     <i class="fas fa-circle" style="color: #979595;"></i>
+                    <p style="color: #979595;">Archived</p>
+                  </div>`
+                  break;
+            }
+
+
+          },
+
+
+       error: function (error) {
+          // console.log(error);
+       }
+    });
+    }
+
+</script>
+
+}
+
+
+
+
+
+
+
+
+
+

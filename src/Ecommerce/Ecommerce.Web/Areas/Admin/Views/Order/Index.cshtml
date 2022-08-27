@@ -1,0 +1,523 @@
+﻿@{
+    ViewData["Title"] = "All";
+}
+
+@section Styles
+{
+<!-- DataTables -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" href="~/AdminLTE/plugins/datatables/components.css">
+
+<!--Toggle switch-->
+<link href="~/CustomSwitch/css/component-custom-switch.css" rel="stylesheet">
+
+<!-- toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+<style>
+
+    #archived, #download, #invoice, #status {
+        cursor: pointer;
+    }
+
+</style>
+
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="float-left">
+                            <h3 class="card-title">Current Orders</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.card-body -->
+            <div class="card-body" id="dataTableBody">
+                <div class="col-md-12 p-0">
+                    <table id="OrdersTable" class="table datatable-show-all">
+                        <thead>
+                            <tr>
+                                <th>OrderId</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th style="width:10%">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <!--FromDB-->
+                        <tfoot>
+                            <tr>
+                                <th>OrderId</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th style="width:10%">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <partial name="ModalPartialInvoice" />
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+
+
+@section Scripts
+{
+
+<!--sweetAlert-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!--Toaster-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+<!--Toggle Switch-->
+<script src="~/CustomSwitch/js/bootstrap4-toggle.min.js"></script>
+
+<!-- DataTables -->
+<script src="~/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/AdminLTE/plugins/select2/js/select2.min.js"></script>
+<!--for printing pdf-->
+<script src="~/js/html2canvas.min.js"></script>
+<script src="~/js/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+
+
+
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    $(function () {
+        $('#OrdersTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "/Admin/Order/GetOrders",
+                "dataType": 'json',
+                "data": {id: "C1457E73-ABC4-42A4-AF2F-CE7CA1C65FF1"}
+            },
+            
+            "columnDefs": [
+                {
+                    "orderable": true,
+                    "targets": 3,
+                    "render": function (data, type, row) {
+                        return GetStatus(data);
+                     }
+                },
+                {
+                    "orderable": false,
+                    "targets": 4,
+                    "render":function (data, type, row) {
+                        return actionDropDown(data, type, row);
+                    }
+                },
+
+                
+            ]
+        })
+    })
+</script>
+
+<script>
+
+    //actions DropDown Functions
+
+    function actionDropDown(data, type, row){
+        var order = row[0];
+
+        return          `<td class="text-center">
+                                        <div class="list-icons text-center">
+                                            <div class="dropdown">
+                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item text-info show-bs-modal"
+                                                    onclick="displayInvoice('${order}')"
+                                                    id = "invoice">
+                                                        <i class="fas fa-file-invoice"></i>
+                                                        <span class="ml-2">Invoice</span>
+                                                    </a>
+                                                    <a href="#" class="dropdown-item text-success"
+                                                    id = "status" onclick="updateStatus('${order}', '${row}')">
+                                                        <i class="fas fa-edit"></i>
+                                                        <span class="ml-2">Update Status</span>
+                                                    </a>
+                                                    <a class="dropdown-item text-primary"
+                                                    onclick="ExportPDF('${order}', '${row}')"
+                                                    id= 'download'>
+                                                        <i class="fas fa-download">
+                                                        </i>
+                                                        <span class="ml-2">PDF Download</span>
+                                                    </a>
+                                                    <a class="dropdown-item text-secondary"
+                                                    id = 'archived' onclick="updateArchiveStatus('${order}','Archived')">
+                                                        <i class="fas fa-archive"></i>
+                                                        <span class="ml-2">Archive</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>`;
+        }
+</script>
+
+
+<script>
+    //Export Pdf functions
+
+      function ExportPDF(status,data) {
+
+
+                html2canvas(document.getElementById('OrdersTable'), {
+                    onrendered: function (canvas) {
+                        var data = canvas.toDataURL();
+                        var docDefinition = {
+                            content: [{
+                                image: data,
+                                width: 500
+                            }]
+                        };
+                        pdfMake.createPdf(docDefinition).download("Orders.pdf");
+                        showToasterMessage("Your download has started", "success");
+                    }
+                });
+            }
+
+</script>
+
+
+
+<script>
+    //get status in colored text
+    function GetStatus(data){
+            if(data=='Archived')
+                return `<span style="color:#A9A9A9">${data}</span>`;
+            else if(data=="Delivered")
+                return `<span style="color:#4CAF50">${data}</span>`;
+            else if(data=="Processing")
+                return `<span style="color:#00BCD4">${data}</span>`;
+            else if(data=="Canceled")
+                return `<span style="color:#F44336">${data}</span>`;
+            else 
+                return `<span style="color:#CDDC39"> ${data} </span>`;
+            
+    }
+
+</script>
+
+
+
+<script>
+    //update status
+
+        function updateStatus(orderNumber,stat){
+            var table = $('#OrdersTable').DataTable();
+            
+            var orderNumber = parseInt(orderNumber);
+              var data,row,rowData;
+              $('#OrdersTable tbody').on('click', 'td', function () {
+                     data = table.row(this);
+                     row = $(this).closest('tr').index();
+                     rowData = table.row(this).data();
+                     console.log(rowData[3]);
+                (async () => {
+
+                const { value: status } = await Swal.fire({
+                  title: 'Select Order Status',
+                  input: 'select',
+                  inputOptions: {
+                    Processing:'Processing',
+                    Shipped: 'Shipped',
+                    Delivered: 'Delivered',
+                    Canceled: 'Canceled',
+                    Archived: 'Archived'
+                  },
+                  inputPlaceholder: 'Select a Status',
+                  showCancelButton: true,
+                  inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                      console.log(value);
+                      if (value !== "") {
+                        resolve()
+                      } else {
+                        resolve('You need to select a status :)')
+                      }
+                    })
+                  }
+            })
+
+            if (status) {
+             // Swal.fire('You selected: ' + status);
+               
+               if(status!==rowData[3]){
+               $.ajax(
+                {
+                    type: "POST",
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    url: `/admin/order/edit?orderNumber=${orderNumber}&status=${status}`,
+                    success: function (response) {
+                        console.log(response);
+                        if(response.status==200){
+                            data.cell(row,3).data(status);
+                            showToasterMessage("Status of the order is changed ", "success");
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log(status);
+                        showToasterMessage("Status of the order could not be changed", "error");
+                    }
+                }
+                     )
+                }
+                else{
+                    
+                    showToasterMessage(`The status is already in ${status} state`, "error");
+                }
+            }
+             $('#OrdersTable tbody').off('click');
+
+    })()
+    });
+        }
+</script>
+
+
+<script>
+    //update archive status
+
+    function updateArchiveStatus(orderNumber,status){
+
+          var table = $('#OrdersTable').DataTable();
+
+          var orderNumber = parseInt(orderNumber);
+          var data,row,rowData;
+          $('#OrdersTable tbody').on('click', 'td', function () {
+
+                 data = table.row(this);
+                 row = $(this).closest('tr').index();
+                 rowData = table.row(this).data();
+                 console.log(rowData[3]);
+              if(rowData[3]!=='Archived')
+               {
+                  Swal.fire({
+                  title: 'Are you sure you want to archive this order?',
+                  text: "You won't be able to revert this!",
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, archive it!'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+
+                    $.ajax(
+                {
+                    type: "POST",
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    url: `/admin/order/edit?orderNumber=${orderNumber}&status=${status}`,
+                    success: function (response) {
+                        console.log(response);
+                        if(response.status==200){
+                            data.cell(row,3).data(status);
+                            showToasterMessage("This Order is archived", "success");
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log(status);
+                        showToasterMessage("The order could not be placed", "success");
+                    }
+                }
+                     )
+                  }
+                })
+
+        }
+        else{
+            showToasterMessage("The order is already archived","error");
+        }
+           $('#OrdersTable tbody').off('click');
+
+            });
+
+    }
+
+    function showToasterMessage(message, type) {
+            if (type == "success")
+                toastr["success"](message);
+            else
+                toastr["error"](message);
+    }
+
+
+</script>
+
+
+<script>
+    function displayInvoice(orderNumber){
+
+             var orderNumber = parseInt(orderNumber);
+              
+               $.ajax({
+       url: '@Url.Action("ModalPartialInvoice", "Order", "Admin")',
+       type: 'POST',
+       cache: false,
+       data: { 'orderNumber': orderNumber },
+       success: function (results) {
+           console.log(results);
+           $('#modal-invoice').modal({
+                 show: true
+           });
+           $('#due').html(`<p class="lead" id="due">Amount due for ${new Date().toLocaleDateString()}</p>`);
+           $('#dateID').html(`<div class="col-12">
+                                <h4><i class="fas fa-globe" id="dateID"></i> AdminLTE, Inc.
+                                <small class="float-right">Date: ${new Date().toLocaleDateString()} </small>
+                                </h4></div>`);
+           $('#orders').html(`<b id="invoice_Number">Order ID: ${results.orderedProducts[0].id}</b>
+                              <br/>
+                             <b>Payment Due:</b> ${new Date().toLocaleDateString()}<br>
+                             <b>User Id :</b> ${results.orderedProducts[0].userId} `);
+           var priceTable = ` <tr> 
+                            <th style="width:50%" >Subtotal:</th>
+                            <td id='subTotal'>৳ ${results.orderedProducts[0].totalPrice} </td>
+                            </tr>
+                        <tr>
+                            <th>Tax (15%)</th>
+                            <td>৳ ${(15 * results.orderedProducts[0].totalPrice)/100}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping:</th>
+                            <td>৳ 50</td>
+                        </tr>
+                        <tr>
+                            <th>Total:</th>
+                            <td>৳ ${results.orderedProducts[0].totalPrice + 
+                                    (15 * results.orderedProducts[0].totalPrice)/100 + 50}</td>
+                        </tr>`
+
+           $('#priceIssues').html(priceTable);
+           
+           const productInfo = document.querySelector('#tblBody');
+           productInfo.innerHTML = '';
+           $.each(results.orderedProducts, function(index, item) {
+           var image = item.productImage;
+           var tableHTML = `<tr>
+                        <td>${item.orderNumber}</td>
+                        <td>${item.productName}</td>
+                        <td><img src="https://localhost:7190/admin/image?url=${image}&w=75&h=75" class="rounded"/></td>
+                        <td>${item.quantity}</td>
+                        <td>${item.description}</td>
+                        <td>${item.price}</td>
+                        </tr>`
+                        productInfo.innerHTML+=tableHTML;
+
+            });
+
+            //pdf printing
+            $('#pdfDownload').click(function(){
+
+               $('#noPrint').hide();
+
+               var pdf = new jsPDF('p', 'pt', 'a4');
+
+               source = $('#pageContent')[0];
+
+               var specialElementHandlers = {
+                    '#noPrint': function (element, renderer) {
+                        return true;
+                }
+            };
+
+                margins = {
+                top: 5,
+                bottom: 5,
+                left: 60,
+                width: 600
+                };
+
+                  
+
+                pdf.fromHTML(
+                $('#pageContent')[0], // HTML string or DOM elem ref.
+                margins.left, // x coord
+                
+                margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+                },
+             
+             function (dispose) {
+                    pdf.save('Test.pdf');
+                  
+                },margins);
+
+             setTimeout(function () {
+                $("#noPrint").show(); 
+            }, 1000);
+
+          });
+
+
+          //printing page 
+          $('#printPage').click(function(){
+              var printDoc = new jsPDF();
+              var source = $('#pageContent')[0];
+              printDoc.fromHTML(source,10, 10, {
+                'width': 180
+            });
+            printDoc.autoPrint({variant:'non-conform'});
+            printDoc.save("print.pdf");
+
+          });
+
+
+          },
+
+             
+       error: function (error) {
+          // console.log(error);
+       }
+    });
+
+    }
+
+</script>
+
+}

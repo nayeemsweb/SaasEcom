@@ -1,0 +1,99 @@
+﻿@model ContactFormEditModel
+@{
+    ViewData["Title"] = "Contact Form";
+    ViewData["PageNav"] = "Contact Form";
+
+}
+
+@section Styles
+{
+   
+}
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Edit Contact Form</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Contact Form Page</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <div>
+        <!-- Contact Form Begin -->
+<div class="contact-form spad">
+    <div class="container-fluid">
+      
+   
+             <div class="card">
+            <!-- form start -->
+            <form role="form" asp-area="Admin" asp-controller="ContactForm" asp-action="Edit" method="post" asp-antiforgery="true" >
+                <input type="hidden" asp-for="Id" />
+                <div class="card-body">
+                    
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name">Name</label>
+                        <input type="text" class="form-control" asp-for="Name" id="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">Email</label>
+                        <input type="email" class="form-control" asp-for="Email" id="Email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="Message">Message</label>
+                        <textarea type="text" class="form-control" asp-for="Message" id="Message" rows="6"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <a asp-action="Edit" asp-controller="ContactForm" asp-area="Admin" class="btn btn-default">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+<!-- Contact Form End -->
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts
+{
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+}
+
+
+
+
+
+
+
+

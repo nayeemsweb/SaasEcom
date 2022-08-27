@@ -1,0 +1,120 @@
+﻿@using Ecommerce.Store
+@model SubscriptionPlanCreateModel
+@{
+    ViewData["Title"] = "Create New SubscriptionPlan";
+    ViewData["PageNav"] = "Create SubscriptionPlan";
+}
+
+@section Styles
+{
+<!-- summernote -->
+<link rel="stylesheet" href="/AdminLTE/plugins/summernote/summernote-bs4.min.css">
+<!-- toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<!-- Select2 -->
+  <link rel="stylesheet" href="/AdminLTE/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="col-sm-6">
+            <h1>Create SubscriptionPlan</h1>
+        </div>
+        <form role="form" asp-controller="SubscriptionPlan" asp-action="Create" method="post" asp-antiforgery="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-8">
+                        <!-- general form elements -->
+                        <div class="card card-primary">
+                            <!-- /.card-header -->                            
+                            <div class="card-body">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="PlanName">Plan Name</label>
+                                    <input type="text" class="form-control" asp-for="PlanName" id="PlanName">
+                                    <span asp-validation-for="PlanName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PlanPrice">Plan Price</label>
+                                    <input type="number" class="form-control" id="PlanPrice" asp-for="PlanPrice" placeholder="Subscription Starts from BDT 1000.00" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!--/.col (left) -->
+                    <!-- left column -->
+                    <div class="col-md-4">
+                        <!-- general form elements -->
+                        <div class="card card-primary">
+                            <!-- /.card-header -->                            
+                            <div class="card-body">
+                                <h5>Pick Plan Color</h5>
+                                <div class="form-group">
+                                    <select class="form-control select2bs4" asp-for="PlanColor" asp-items="Html.GetEnumSelectList<PlanColor>()"></select>
+                                    @*<option selected="selected">Gray</option>*@
+                                    <span asp-validation-for="PlanColor" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    
+                    <!-- right column -->
+                    <div class="col-md-8">
+                        <!-- /.card-header -->
+                        <div class="card card-primary">
+                            <!-- form start -->
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="ProductUploadLimit">Product Upload Limit</label>
+                                        <input type="number" class="form-control" id="ProductUploadLimit" asp-for="ProductUploadLimit" placeholder="Starter Upload limit Upto 100 products" />
+
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="StorageLimit">Storage Limit</label>
+                                        <input type="number" class="form-control" id="StorageLimit" asp-for="StorageLimit" placeholder="Starter Storage limit 128(GB)" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>                   
+
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+            <div class="card-footer">
+                <a asp-action="Index" asp-controller="SubscriptionPlan" asp-area="Admin" class="btn btn-default">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<!-- toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+</script>
+}
+

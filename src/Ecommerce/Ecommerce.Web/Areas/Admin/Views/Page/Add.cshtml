@@ -1,0 +1,176 @@
+﻿@using Ecommerce.Web.Areas.Customer.Models
+@model PageModel
+@{
+
+}
+
+@section Styles{
+<!-- summernote -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/summernote/summernote-bs4.min.css">
+<!-- dropzonejs -->
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+}
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Add New Page</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Product Add Page</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <div>
+        <form role="form" asp-controller="Product" asp-action="Add" method="post" asp-antiforgery="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-8">
+                        <!-- general form elements -->
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label asp-for="PageTitle">Title of the Page</label>
+                                    <input type="text" class="form-control" asp-for="PageTitle" id="productName">
+                                    <span asp-validation-for="PageTitle" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PageContent">Page Content</label>
+                                    <span asp-validation-for="PageContent" class="text-danger"></span>
+                                    <textarea asp-for="PageContent"  id="pageContent">
+                                        Place <em>some</em> <u>text</u> <strong>here</strong>
+                                    </textarea>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!--/.col (left) -->
+                    <!-- right column -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <label>Page Publish status</label>
+                                <div class="form-group col-md-12">
+                                    <select class="form-control">
+                                        <option>Draft</option>
+                                        <option>Active</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                         <div class="card">
+                            <!-- form start -->
+                            <div class="card-body">
+                                <label>Add Image to Header</label>
+                                 <div id="pageBredImages" class="fallback dropzone">
+                                    <input name="file" type="file" multiple class="d-none"/>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <!-- /Hidden Fields -->
+                    @Html.HiddenFor(m => m.BreadcrumbImageUrl)
+
+                    <div class="card-footer col-md-12">
+                        <a asp-action="Index" asp-controller="Product" asp-area="Admin" class="btn btn-default">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>           
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts
+{
+
+<!-- Summernote -->
+<script src="/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- dropzonejs -->
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+         // Summernote
+           $('#pageContent').summernote({
+                placeholder: 'Write about your Page',
+                tabsize: 2,
+                height: 320
+                
+          });
+          
+          //$("div#myId").dropzone({
+          //   url: "/Admin/Category/ImageUploader"
+          // });
+          Dropzone.autoDiscover = false;
+           var myDropzone = new Dropzone("div#pageBredImages", {
+                url: "/Admin/Home/ImageUploader",
+                maxFiles: 1,
+                addRemoveLinks: true,
+                init: function() {
+                    //will be impliment later
+               },
+               success(file, message) {
+                    if(message.code == 200)
+                    {
+                        $("#BreadcrumbImageUrl").val("");
+                        $("#BreadcrumbImageUrl").val(message.path);
+                    }
+                    console.log("success file", file);
+            
+                },
+                removedfile: function(file) {
+                       var fileName = file.name;
+                       $.ajax({
+                       type: 'POST',
+                       url: '/Admin/Category/RemoveImage',
+                       data: {name: fileName},
+                       sucess: function(data){
+                          console.log('success: ' + data); }
+                  });
+                 var _ref;
+                  return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+               }
+               
+                
+               
+            });
+         //   var fileName = $('#profilePicture').val();
+         //var mockFile = {
+         //  name: fileName,
+         //  size: 12345
+         //};
+         //myDropzone.options.addedfile.call(myDropzone, mockFile);
+         //myDropzone.options.thumbnail.call(myDropzone, mockFile, "https://lh3.googleusercontent.com/-eubcS91wUNg/AAAAAAAAAAI/AAAAAAAAAL0/iE1Hduvbbqc/photo.jpg?sz=104");
+</script>
+}

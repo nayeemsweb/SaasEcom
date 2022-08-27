@@ -1,0 +1,8 @@
+﻿@model ShopIndexModel
+<div class="hero__item set-bg" data-setbg="https://localhost:7190/admin/image?url=@Model.getStoreInfo().StoreBannerUrl&w=1000&h=300">
+    <div class="hero__text"> 
+        <h2 class="text-white">@Model.getStoreInfo().StoreName</h2>
+        <p class="text-gray">@Model.getStoreInfo().StoreTitle</p>
+        <a href="/Customer/Shop/ShopGrid" class="primary-btn">SHOP NOW</a>
+    </div>
+</div>
