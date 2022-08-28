@@ -1,20 +1,12 @@
 ﻿using Autofac;
 using Ecommerce.Membership.Entities;
-using Ecommerce.Store.BusinessObjects;
 using Ecommerce.Web.Areas.Customer.Models;
 using Ecommerce.Web.Areas.Customer.Models.ShopAccountModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Data.SqlClient;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Net;
-using System.Net.Mime;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Newtonsoft.Json;
 using Ecommerce.Store.Services.MetaData;
 using Ecommerce.Common;
 
@@ -57,7 +49,8 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             model.setStoreId(storeId);
             return View(model);
         }
-        [HttpPost]
+        
+        [HttpPost]        
         public object infiniteProduct(string steps, string volume)
         {
             var model = _scope.Resolve<ShopIndexModel>();
@@ -66,8 +59,8 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             model.setStoreId(storeId);
             try
             {
-                var products=model.loadFeatureProduct(Int32.Parse(steps), Int32.Parse(volume));
-                return new { Code = 200, Message = "Success", Products=products };
+                var products = model.loadFeatureProduct(Int32.Parse(steps), Int32.Parse(volume));
+                return new { Code = 200, Message = "Success", Products = products };
             }
             catch (Exception ioe)
             {
@@ -80,10 +73,9 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             var model = _scope.Resolve<CategoryModel>();
             model.setCategoryId(new Guid(Id));
             model.getCurrentCategory();
-
-
             return View(model);
         }
+        
         [HttpPost]
         public object infiniteCategoryBasedProduct(string steps, string volume, string CategoryId)
         {
@@ -141,15 +133,13 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             model.GetCartItems();
             return View(model);
         }
-        
+
         public IActionResult ShoppingCart() // no param
         {
             var model = _scope.Resolve<CartModel>();
             model.GetCartItems();
             return View(model);
         }
-
-        
 
         public JsonResult DeleteProduct(Guid Id)
         {
@@ -210,19 +200,15 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             return RedirectToAction("Index");
         }
-        
+
         public IActionResult Wishlist()
         {
             var model = _scope.Resolve<WishlistModel>();
             model.GetAllWishlists();
             return View(model);
         }
-
-        
-
         #region Register Methods
 
-        
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             var model = _scope.Resolve<RegisterModel>();
@@ -245,15 +231,15 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 .ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser 
-                { 
-                    UserName = model.Email, 
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     StoreId = model.StoreId
                 };
-                
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -274,7 +260,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToAction("index", "Shop", new { email = model.Email});
+                        return RedirectToAction("index", "Shop", new { email = model.Email });
                     }
                     else
                     {
@@ -287,8 +273,6 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -329,7 +313,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 var userStoreId = _userManager.FindByEmailAsync(userEmail).Result.StoreId;
                 var currentStoreId = _storeInfo.GetStoreId();
 
-                if(userStoreId == currentStoreId)
+                if (userStoreId == currentStoreId)
                 {
                     var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
@@ -352,13 +336,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                         return View(model);
                     }
                 }
-                
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -413,21 +391,17 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             if (ModelState.IsValid)
             {
                 model.Resolve(_scope);
-
                 model.CreateContactForm();
-
                 return RedirectToAction("Contact");
-
             }
             else
             {
                 return RedirectToAction("Contact");
             }
-
         }
 
 
-	        public JsonResult GetMyOrders(string id)//sends all orders to dataTable in View
+        public JsonResult GetMyOrders(string id)//sends all orders to dataTable in View
         {
             var userId = _userInfo.GetUserId();
             var DataTableModel = new DataTablesAjaxRequestModel(Request);
@@ -472,30 +446,20 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         public IActionResult MyOrders()
         {
             return View();
-        }        
+        }
 
-
-
-
-       
         public IActionResult ReceiveSubscriptionData(ProductSubscriptionNotificationModel model)
         {
             if (ModelState.IsValid)
             {
                 model.Resolve(_scope);
-
                 model.SaveSubscriptionData();
-
                 return RedirectToAction("Contact");
-
             }
             else
             {
                 return RedirectToAction("Contact");
             }
-
-
         }
     }
 }
-
