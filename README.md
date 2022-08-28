@@ -3,6 +3,10 @@
 
 Minimalistic SaaS E-Commerce application.
 
+## Demo
+
+![TicketPurchaseSystem](./src/Ecommerce/Ecommerce.Web/wwwroot/LandingSite/images/SaasEcom-2.png?raw=true)
+
 ## Installation
 
 Firstly, clone the project-
@@ -79,4 +83,3 @@ Store Procedure
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
