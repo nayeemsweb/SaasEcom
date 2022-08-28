@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.Text;
 using System.Text.Encodings.Web;
 using Autofac;
 using Ecommerce.Membership.Entities;
@@ -170,7 +169,7 @@ namespace Ecommerce.Web.Controllers
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                         return View(model);
                     }
-                }                
+                }
             }
 
             // If we got this far, something failed, redisplay form
