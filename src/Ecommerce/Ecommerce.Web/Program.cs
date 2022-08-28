@@ -9,7 +9,6 @@ using Ecommerce.Membership.Services;
 using Ecommerce.Store;
 using Ecommerce.Store.DbContexts;
 using Ecommerce.Web;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,23 +17,6 @@ using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("https://127.0.0.1:7190");
-
-//var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));;
-
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>();;
-//var connectionString = builder.Configuration
-//    .GetConnectionString("ApplicationDbContextConnection") ??
-//    throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));;
-
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var assemblyName = Assembly.GetExecutingAssembly().FullName;
@@ -72,7 +54,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
-
 
 builder.Services.AddSingleton<IAuthorizationHandler, TestRequirementHandler>();
 
@@ -138,8 +119,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
-
-
 
 try
 {
