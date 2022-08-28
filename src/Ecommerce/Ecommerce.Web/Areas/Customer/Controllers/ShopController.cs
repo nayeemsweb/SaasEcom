@@ -1,22 +1,16 @@
 ﻿using Autofac;
 using Ecommerce.Membership.Entities;
-using Ecommerce.Store.BusinessObjects;
 using Ecommerce.Web.Areas.Customer.Models;
 using Ecommerce.Web.Areas.Customer.Models.ShopAccountModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Data.SqlClient;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Net;
-using System.Net.Mime;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Newtonsoft.Json;
 using Ecommerce.Store.Services.MetaData;
 using Ecommerce.Common;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Ecommerce.Web.Areas.Customer.Controllers
 {
@@ -50,6 +44,11 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         #endregion
         public IActionResult Index(ShopIndexModel model)
         {
+            //var temp = _scope.Resolve<CreateEmailNotificationFile>();
+            //temp.getCustomerName();
+
+
+
             //var storeId = _storeInfo.GetStoreId();
             model.Resolve(_scope);
             var storeId = _storeInfo.GetStoreId();
@@ -57,6 +56,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             model.setStoreId(storeId);
             return View(model);
         }
+        
         [HttpPost]
         public object infiniteProduct(string steps, string volume)
         {
@@ -66,8 +66,8 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             model.setStoreId(storeId);
             try
             {
-                var products=model.loadFeatureProduct(Int32.Parse(steps), Int32.Parse(volume));
-                return new { Code = 200, Message = "Success", Products=products };
+                var products = model.loadFeatureProduct(Int32.Parse(steps), Int32.Parse(volume));
+                return new { Code = 200, Message = "Success", Products = products };
             }
             catch (Exception ioe)
             {
@@ -75,6 +75,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             return new { Code = 400, Message = "Unsuccessful" };
         }
+        
         public IActionResult Category(string Id)
         {
             var model = _scope.Resolve<CategoryModel>();
@@ -84,7 +85,8 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
             return View(model);
         }
-        [HttpPost]
+        
+        [HttpPost]        
         public object infiniteCategoryBasedProduct(string steps, string volume, string CategoryId)
         {
             var model = _scope.Resolve<CategoryModel>();
@@ -102,6 +104,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             return new { Code = 400, Message = "Unsuccessful" };
         }
+        
         public IActionResult ShopGrid()
         {
             var storeId = _storeInfo.GetStoreId();
@@ -135,21 +138,20 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         {
             return View();
         }
+        
         public IActionResult CheckOut()
         {
             var model = _scope.Resolve<CartModel>();
             model.GetCartItems();
             return View(model);
         }
-        
+
         public IActionResult ShoppingCart() // no param
         {
             var model = _scope.Resolve<CartModel>();
             model.GetCartItems();
             return View(model);
         }
-
-        
 
         public JsonResult DeleteProduct(Guid Id)
         {
@@ -173,6 +175,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         {
             return View();
         }
+        
         public IActionResult ShopDetails()
         {
             return View();
@@ -182,6 +185,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         {
             return View();
         }
+        
         [HttpPost]
         public IActionResult Wishlist(WishlistAddModel model, Guid Id)
         {
@@ -210,7 +214,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             return RedirectToAction("Index");
         }
-        
+
         public IActionResult Wishlist()
         {
             var model = _scope.Resolve<WishlistModel>();
@@ -218,11 +222,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             return View(model);
         }
 
-        
-
         #region Register Methods
-
-        
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             var model = _scope.Resolve<RegisterModel>();
@@ -245,15 +245,15 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 .ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser 
-                { 
-                    UserName = model.Email, 
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     StoreId = model.StoreId
                 };
-                
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -274,7 +274,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToAction("index", "Shop", new { email = model.Email});
+                        return RedirectToAction("index", "Shop", new { email = model.Email });
                     }
                     else
                     {
@@ -295,7 +295,6 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         #endregion
 
         #region Login Methods
-
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             var model = _scope.Resolve<LoginModel>();
@@ -329,7 +328,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 var userStoreId = _userManager.FindByEmailAsync(userEmail).Result.StoreId;
                 var currentStoreId = _storeInfo.GetStoreId();
 
-                if(userStoreId == currentStoreId)
+                if (userStoreId == currentStoreId)
                 {
                     var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
@@ -352,16 +351,83 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                         return View(model);
                     }
                 }
-                
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
+        #endregion
 
+        #region Facebook Login
+
+        [AllowAnonymous]
+        public IActionResult FacebookLogin()
+        {
+            var model = _scope.Resolve<LoginModel>();
+            //var redirectUrl = Url.Action("Index", "Shop");
+            var redirectUrl = Url.Action("FacebookResponse");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
+            return new ChallengeResult("Facebook", properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> FacebookResponse(RegisterModel model)
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+
+            var userEmail = info.Principal.FindFirst(ClaimTypes.Email).Value;
+            var userStoreId = _userManager.FindByEmailAsync(userEmail).Result.StoreId;
+            var currentStoreId = _storeInfo.GetStoreId();
+
+            if (userStoreId == currentStoreId)
+            {
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+                string[] userInfo =
+                    {
+                    info.Principal.FindFirst(ClaimTypes.Name).Value,
+                    info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    info.Principal.Identities.Select(info => info.FindFirst(userStoreId)).ToString()
+                };
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return RedirectToAction("Index", "Shop");
+                }
+                else
+                {
+                    var storeId = _storeInfo.GetStoreId();
+                    model.StoreId = storeId;
+                    var user = new ApplicationUser
+                    {
+                        Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                        UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                        StoreId = _userManager.FindByEmailAsync(userEmail).Result.StoreId
+                    };
+
+                    var identResult = await _userManager.CreateAsync(user);
+                    if (identResult.Succeeded)
+                    {
+                        _logger.LogInformation("User created.");
+                        identResult = await _userManager.AddLoginAsync(user, info);
+                        if (identResult.Succeeded)
+                        {
+                            _logger.LogInformation("User logged in.");
+                            await _signInManager.SignInAsync(user, false);
+                            return RedirectToAction("Index", "Shop");
+                        }
+                    }
+                    return RedirectToAction("Index", "Shop");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Shop");
+        }
+
+        #endregion
+
+        #region Logout
         [HttpPost]
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
@@ -376,10 +442,9 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 return RedirectToAction("Index");
             }
         }
-
         #endregion
 
-
+        #region DeleteWishlist
         [HttpPost]
         public IActionResult DeleteWishlist(Guid Id)
         {
@@ -403,31 +468,31 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return Json(new { success = false, message = "error", status = 500 });
             }
-
+            
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region CreateContactForm
         [ValidateAntiForgeryToken, HttpPost]
         public IActionResult Create(ContactFormModel model)
         {
             if (ModelState.IsValid)
             {
                 model.Resolve(_scope);
-
                 model.CreateContactForm();
-
                 return RedirectToAction("Contact");
-
             }
             else
             {
                 return RedirectToAction("Contact");
             }
-
         }
 
+        #endregion
 
-	        public JsonResult GetMyOrders(string id)//sends all orders to dataTable in View
+        #region GetMyOrders
+        public JsonResult GetMyOrders(string id)//sends all orders to dataTable in View
         {
             var userId = _userInfo.GetUserId();
             var DataTableModel = new DataTablesAjaxRequestModel(Request);
@@ -435,7 +500,9 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
             return Json(model.GetAllOrders(DataTableModel, new Guid(userId)));
         }
+        #endregion
 
+        #region ModalPartialInvoice
         public JsonResult ModalPartialInvoice(int orderNumber)//sends all orderedProducts to partial view Invoice
         {
             try
@@ -452,6 +519,10 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
             return Json(new { success = false, message = "error", status = 500 });
         }
+
+        #endregion
+
+        #region ModalTrackOrder
         public JsonResult ModalTrackOrder(int orderNumber)//sends all orderedProducts to partial view Invoice
         {
             try
@@ -469,33 +540,30 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             return Json(new { success = false, message = "error", status = 500 });
         }
 
+        #endregion
+
+        #region MyOrders
         public IActionResult MyOrders()
         {
             return View();
-        }        
+        }
 
+        #endregion
 
-
-
-       
+        #region ReceiveSubscriptionData
         public IActionResult ReceiveSubscriptionData(ProductSubscriptionNotificationModel model)
         {
             if (ModelState.IsValid)
             {
                 model.Resolve(_scope);
-
                 model.SaveSubscriptionData();
-
                 return RedirectToAction("Contact");
-
             }
             else
             {
                 return RedirectToAction("Contact");
             }
-
-
         }
+        #endregion
     }
 }
-

@@ -44,11 +44,6 @@
 
     <section id="login_register_form">
         <div class="form_box">
-            @*<div class="buttons d-flex">
-                <div id="active_button"></div>
-                <button type="button" class="toggle-btn"><strong onclick="login()">@ViewData["Title"]</strong></button>
-                <button type="button" class="toggle-btn"><strong onclick="register()">Register</strong></button>
-                </div>  *@
             <form id="account" method="post" asp-action="Login" asp-controller="Account" asp-area="">
                 <h2 class="my-5 text-center">@ViewData["Title"] Here</h2>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -77,9 +72,6 @@
                     <button id="login-submit" type="submit" class="main-btn btn-hover">Submit</button>
                 </div>
                 <div>
-                    @*<p>
-                        <a id="forgot-password" asp-area="" asp-action="ForgotPassword" asp-controller="Account">Forgot your password?</a>
-                        </p>*@
                     <p class="mt-5 text-center">
                         <a asp-area="" asp-action="Register" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
                             <i class="lni lni-grid-alt pe-2"></i>
@@ -93,19 +85,20 @@
                             Go Back
                         </a>
                     </p>
-                    @*<p>
-                        <a id="resend-confirmation" asp-area="" asp-controller="Account" asp-action="ResendEmailConfirmation">
-                        Resend email confirmation
+                    <p class="my-5 text-center">
+                        <a class="btn btn-outline-primary btn-lg" asp-action="FacebookLogin">
+                            <i class="lni lni-facebook-original"></i>
+                            Log In With Facebook
                         </a>
-                        </p>*@
+                    </p>
                 </div>
             </form>
         </div>
     </section>
 
     @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        <partial name="_ValidationScriptsPartial" />
+    }
     <!-- ======== JS here ======== -->
     <script src="~/LandingSite/assets/js/bootstrap.bundle.min.js"></script>
     <script src="~/LandingSite/assets/js/wow.min.js"></script>

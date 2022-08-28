@@ -19,23 +19,6 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("https://127.0.0.1:7190");
 
-//var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));;
-
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>();;
-//var connectionString = builder.Configuration
-//    .GetConnectionString("ApplicationDbContextConnection") ??
-//    throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));;
-
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
-
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var assemblyName = Assembly.GetExecutingAssembly().FullName;
 
@@ -84,6 +67,15 @@ builder.Services
     .AddSignInManager<SignInManager>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
+
+//Facebook Authentication
+builder.Services.AddAuthentication()
+    .AddFacebook(facebookOptions =>
+    {
+        facebookOptions.AppId = "3169318410001585";
+        facebookOptions.AppSecret = "8908b9a8dddf116ca8211c1c9887d3c5";
+        facebookOptions.Scope.Add("email");
+    });
 
 
 builder.Services.AddAuthorization(options =>

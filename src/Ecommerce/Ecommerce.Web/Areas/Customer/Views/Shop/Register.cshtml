@@ -3,7 +3,6 @@
     ViewData["Title"] = "Register";
 }
 
-
 <!-- Register Form Begin -->
 <div class="contact-form spad">
     <div class="container">
@@ -14,9 +13,9 @@
                 </div>
             </div>
         </div>
-        <form asp-area="Customer" asp-controller="Shop" asp-action="Register" 
-        asp-antiforgery="true" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-area="Customer" asp-controller="Shop" asp-action="Register"
+              asp-antiforgery="true" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
                 <div class="offset-md-3 col-md-6 d-block">
                     <input type="text" placeholder="First Name" asp-for="FirstName" autocomplete="First Name" aria-required="true">
@@ -27,8 +26,8 @@
 
                     <input type="email" placeholder="Email" asp-for="Email" autocomplete="username" aria-required="true">
                     <span asp-validation-for="Email" class="text-danger"></span>
-                    
-                    <input type="password" placeholder="Password" asp-for="Password" autocomplete="new-password" aria-required="true" >
+
+                    <input type="password" placeholder="Password" asp-for="Password" autocomplete="new-password" aria-required="true">
                     <span asp-validation-for="Password" class="text-danger"></span>
 
                     <input type="password" placeholder="Confirm Password" asp-for="ConfirmPassword" autocomplete="new-password" aria-required="true">
@@ -39,12 +38,21 @@
                 <div class="col-md-12 text-center">
                     <button id="registerSubmit" type="submit" class="site-btn">Submit</button>
                 </div>
+
+                <div class="offset-md-3 col-md-6 d-block my-5">
+                    <a class="btn btn-outline-primary btn-lg d-block" asp-action="FacebookLogin">
+                        <i class="fa fa-facebook-official pr-2" aria-hidden="true"></i>
+                        Register With Facebook
+                    </a>
+                </div>
             </div>
         </form>
+
+
     </div>
 </div>
-<!-- Register Form End -->
 
+<!-- Register Form End -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

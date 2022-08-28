@@ -5,6 +5,7 @@ using Autofac;
 using Ecommerce.Membership.Entities;
 using Ecommerce.Store.Services.MetaData;
 using Ecommerce.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -38,10 +39,7 @@ namespace Ecommerce.Web.Controllers
             _storeInfo = storeInfo;
         }
 
-        public IActionResult JoinUs()
-        {
-            return View();
-        }
+        #region Register
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             var model = _lifetimeScope.Resolve<RegisterModel>();
@@ -50,6 +48,7 @@ namespace Ecommerce.Web.Controllers
 
             return View(model);
         }
+
         [HttpPost, AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Register(RegisterModel registerModel)
         {
@@ -113,6 +112,70 @@ namespace Ecommerce.Web.Controllers
             return View(registerModel);
         }
 
+        #endregion
+
+        #region Facebook Login
+
+        [AllowAnonymous]
+        public IActionResult FacebookLogin()
+        {
+            var model = _lifetimeScope.Resolve<LoginModel>();
+            //var redirectUrl = Url.Content("~/");
+            var redirectUrl = Url.Action("FacebookResponse");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
+            return new ChallengeResult("Facebook", properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+            string[] userInfo =
+                {
+                    info.Principal.FindFirst(ClaimTypes.Name).Value,
+                    info.Principal.FindFirst(ClaimTypes.Email).Value
+                };
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User logged in.");
+                //return Json(userInfo);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                var user = new ApplicationUser
+                {
+                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+                };
+
+                var identResult = await _userManager.CreateAsync(user);
+                if (identResult.Succeeded)
+                {
+                    _logger.LogInformation("User created.");
+                    identResult = await _userManager.AddLoginAsync(user, info);
+                    if (identResult.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
+                        await _signInManager.SignInAsync(user, false);
+                        //return Json(userInfo);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                return RedirectToAction("Privacy", "Home");
+            }
+        }
+
+        #endregion
+
+        #region Built-in Login
+
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             var model = _lifetimeScope.Resolve<LoginModel>();
@@ -170,13 +233,15 @@ namespace Ecommerce.Web.Controllers
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                         return View(model);
                     }
-                }                
+                }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
+        #endregion
+
+        #region RegisterConfirmation
         public async Task<IActionResult> RegisterConfirmation(string email, string returnUrl = null)
         {
             var model = _lifetimeScope.Resolve<RegistrationConfirmationModel>();
@@ -209,6 +274,9 @@ namespace Ecommerce.Web.Controllers
 
             return View();
         }
+        #endregion
+
+        #region Logout
 
         [HttpPost]
         public async Task<IActionResult> Logout(string returnUrl = null)
@@ -224,5 +292,7 @@ namespace Ecommerce.Web.Controllers
                 return RedirectToAction();
             }
         }
+        #endregion
+
     }
 }
