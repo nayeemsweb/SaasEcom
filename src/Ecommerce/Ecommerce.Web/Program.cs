@@ -9,6 +9,7 @@ using Ecommerce.Membership.Services;
 using Ecommerce.Store;
 using Ecommerce.Store.DbContexts;
 using Ecommerce.Web;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+
 builder.Services.AddSingleton<IAuthorizationHandler, TestRequirementHandler>();
 
 builder.Services
@@ -65,6 +67,15 @@ builder.Services
     .AddSignInManager<SignInManager>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
+
+//Facebook Authentication
+builder.Services.AddAuthentication()
+    .AddFacebook(facebookOptions =>
+    {
+        facebookOptions.AppId = "3169318410001585";
+        facebookOptions.AppSecret = "8908b9a8dddf116ca8211c1c9887d3c5";
+        facebookOptions.Scope.Add("email");
+    });
 
 
 builder.Services.AddAuthorization(options =>
@@ -119,6 +130,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
+
+
 
 try
 {
